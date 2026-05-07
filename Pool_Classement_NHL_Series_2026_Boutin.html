@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pool NHL Boutin 2026 — Classement</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:      #003764;
+  --navy-90:   #00305a;
+  --navy-20:   #ccd8e4;
+  --navy-10:   #e6edf4;
+  --ice:       #79dad4;
+  --ice-dark:  #4cbdb6;
+  --ice-10:    #f0fbfa;
+  --gold:      #f5c842;
+  --gold-dark: #d4a800;
+  --red:       #c0392b;
+  --bg:        #0a1628;
+  --bg2:       #0f1f38;
+  --surface:   #162840;
+  --surface2:  #1d3352;
+  --line:      #243d5c;
+  --ink:       #e8f0f8;
+  --ink-60:    #8aa8c8;
+  --ink-30:    #4a6a8a;
+  --font-display: 'Bebas Neue', Impact, sans-serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-mono:    'DM Mono', monospace;
+  --radius: 4px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── RINK TEXTURE BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(121,218,212,.015) 60px, rgba(121,218,212,.015) 61px),
+    repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(121,218,212,.015) 60px, rgba(121,218,212,.015) 61px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── HEADER ── */
+header {
+  position: relative;
+  background: linear-gradient(135deg, #001f3f 0%, #003764 60%, #00305a 100%);
+  border-bottom: 3px solid var(--ice);
+  padding: 0;
+  overflow: hidden;
+  z-index: 10;
+}
+header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 60px;
+  background: radial-gradient(ellipse at 50% 100%, rgba(121,218,212,.15) 0%, transparent 70%);
+}
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 32px 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+.header-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.header-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ice);
+  opacity: .8;
+}
+.header-name {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1;
+  color: #fff;
+  letter-spacing: .02em;
+}
+.header-name span { color: var(--ice); }
+.header-meta {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+.phase-badge {
+  background: var(--ice);
+  color: var(--navy);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 2px;
+}
+.last-update {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-60);
+  letter-spacing: .06em;
+}
+
+/* ── MAIN ── */
+main {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  z-index: 1;
+}
+
+/* ── SECTION TITLES ── */
+.section-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: .06em;
+  color: var(--ice);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--line), transparent);
+}
+
+/* ── PODIUM ── */
+.podium {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 1fr;
+  gap: 12px;
+  margin-bottom: 40px;
+  align-items: end;
+}
+.podium-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 16px 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s;
+  animation: fadeUp .4s ease both;
+}
+.podium-card:hover { transform: translateY(-3px); }
+.podium-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.podium-1 { order: 2; }
+.podium-2 { order: 1; }
+.podium-3 { order: 3; }
+.podium-1::before { background: var(--gold); }
+.podium-2::before { background: #b0b8c8; }
+.podium-3::before { background: #cd7f32; }
+.podium-1 { animation-delay: .05s; }
+.podium-2 { animation-delay: .1s; }
+.podium-3 { animation-delay: .15s; }
+
+.podium-rank {
+  font-family: var(--font-display);
+  font-size: 48px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.podium-1 .podium-rank { color: var(--gold); font-size: 64px; }
+.podium-2 .podium-rank { color: #b0b8c8; }
+.podium-3 .podium-rank { color: #cd7f32; }
+
+.podium-trophy { font-size: 28px; margin-bottom: 6px; display: block; }
+.podium-1 .podium-trophy { font-size: 40px; }
+
+.podium-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.podium-nickname {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ice);
+  margin-bottom: 12px;
+}
+.podium-pts {
+  font-family: var(--font-display);
+  font-size: 32px;
+  color: #fff;
+}
+.podium-pts-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-30);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.podium-breakdown {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.breakdown-chip {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-60);
+}
+.breakdown-chip strong { color: var(--ice); }
+
+/* ── FULL STANDINGS TABLE ── */
+.standings-wrap {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 40px;
+  animation: fadeUp .4s .2s ease both;
+}
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.standings-table thead tr {
+  background: var(--navy);
+}
+.standings-table thead th {
+  padding: 11px 16px;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ice);
+  white-space: nowrap;
+}
+.standings-table thead th.num { text-align: center; }
+.standings-table tbody tr {
+  border-bottom: 1px solid var(--line);
+  transition: background .15s;
+  cursor: pointer;
+}
+.standings-table tbody tr:last-child { border-bottom: none; }
+.standings-table tbody tr:hover { background: var(--surface2); }
+.standings-table tbody tr.active { background: var(--surface2); }
+.standings-table tbody td {
+  padding: 13px 16px;
+  font-size: 13px;
+  color: var(--ink);
+}
+.standings-table tbody td.num { text-align: center; }
+.td-rank {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--ink-30);
+  text-align: center !important;
+  width: 44px;
+}
+.td-rank.r1 { color: var(--gold); }
+.td-rank.r2 { color: #b0b8c8; }
+.td-rank.r3 { color: #cd7f32; }
+.td-name { font-weight: 600; }
+.td-nickname {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ice-dark);
+  display: block;
+  margin-top: 1px;
+}
+.td-pts {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: #fff;
+  text-align: center !important;
+}
+.td-phase {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-60);
+  text-align: center !important;
+}
+.td-phase.has-pts { color: var(--ice); font-weight: 500; }
+.td-bar-wrap {
+  width: 120px;
+}
+.td-bar {
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.td-bar-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--ice-dark), var(--ice));
+  border-radius: 2px;
+  transition: width .6s ease;
+}
+.pending-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-30);
+  letter-spacing: .08em;
+  font-style: italic;
+}
+
+/* ── DETAIL PANELS ── */
+.detail-row td {
+  padding: 0 !important;
+  background: var(--bg2) !important;
+}
+.detail-panel {
+  padding: 20px 24px;
+  display: none;
+  border-top: 1px solid var(--line);
+}
+.detail-panel.open { display: block; }
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.detail-section-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ice);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.pred-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(36,61,92,.5);
+  font-size: 12px;
+  gap: 8px;
+}
+.pred-row:last-child { border-bottom: none; }
+.pred-serie { color: var(--ink-60); flex: 1; }
+.pred-pick {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pred-matchs {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-30);
+}
+.pred-result {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+.result-correct   { background: rgba(26,122,74,.25); color: #4caf80; }
+.result-partial   { background: rgba(245,200,66,.15); color: var(--gold); }
+.result-wrong     { background: rgba(192,57,43,.2);  color: #e07070; }
+.result-pending   { background: var(--line); color: var(--ink-30); }
+
+.bonus-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.bonus-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(36,61,92,.5);
+  font-size: 12px;
+  gap: 12px;
+}
+.bonus-item:last-child { border-bottom: none; }
+.bonus-q-text { color: var(--ink-60); flex: 1; line-height: 1.35; }
+.bonus-answer {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ice);
+  white-space: nowrap;
+}
+
+.team-logo {
+  width: 28px; height: 28px;
+  object-fit: contain;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.team-logo-sm {
+  width: 22px; height: 22px;
+  object-fit: contain;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.series-card-label { display: flex; align-items: center; gap: 5px; }
+
+/* ── SERIES OVERVIEW ── */
+.series-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin-bottom: 40px;
+  animation: fadeUp .4s .25s ease both;
+}
+.series-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.series-card-header {
+  background: var(--navy);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.series-card-label-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ice);
+  letter-spacing: .08em;
+}
+.series-card-conf {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+.conf-est   { background: rgba(21,101,192,.3); color: #90caf9; }
+.conf-ouest { background: rgba(198,40,40,.3);  color: #ef9a9a; }
+.series-matchup {
+  padding: 12px 14px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.series-result {
+  padding: 0 14px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.series-winner {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ice-dark);
+  font-weight: 500;
+}
+.series-pending {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-30);
+  font-style: italic;
+}
+.series-picks {
+  padding: 0 14px 12px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.pick-bubble {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-60);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.pick-bubble .bubble-pred { color: var(--ink-60); }
+.pick-bubble .bubble-name { color: var(--ink-30); font-size: 9px; letter-spacing: .04em; }
+.pick-bubble.winner { border-color: var(--ice-dark); background: rgba(76,189,182,.1); }
+.pick-bubble.winner .bubble-pred { color: var(--ice); }
+.pick-bubble.winner .bubble-name { color: var(--ice-dark); opacity: .7; }
+
+/* ── BONUS SECTION ── */
+.bonus-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+.bonus-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.bonus-card-header {
+  background: var(--surface2);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.bonus-card-q {
+  font-size: 12px;
+  color: var(--ink);
+  flex: 1;
+}
+.bonus-card-pts {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ice);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.bonus-picks-row {
+  padding: 10px 14px 12px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.bonus-pick-bubble {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.bonus-pick-bubble .bp-val { color: var(--ink-60); }
+.bonus-pick-bubble .bp-name { color: var(--ink-30); font-size: 9px; letter-spacing: .04em; }
+.bonus-pick-bubble.winner { border-color: var(--ice-dark); background: rgba(76,189,182,.15); }
+.bonus-pick-bubble.winner .bp-val { color: var(--ice); font-weight: 600; }
+.bonus-pick-bubble.winner .bp-name { color: var(--ice-dark); }
+.bonus-true-answer {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-60);
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.bonus-true-answer strong { color: var(--ice); font-weight: 600; }
+
+/* ── BRACKET ── */
+.bracket-section { margin-bottom: 40px; }
+.bracket-outer { overflow-x: auto; padding-bottom: 8px; }
+
+/* 7-column grid : R1W | R2W | CFW | SCF | CFE | R2E | R1E */
+.bracket-grid {
+  display: grid;
+  grid-template-columns: 130px 110px 90px 110px 90px 110px 130px;
+  min-width: 760px;
+  gap: 0 4px;
+  align-items: stretch;
+}
+
+/* Each column stacks its boxes vertically */
+.bk-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 6px;
+  padding: 6px 0;
+}
+
+/* R1 groups two pairs, each pair aligns with one R2 matchup */
+.bk-arm-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+  position: relative;
+}
+
+/* Bracket connector lines on West side (right edge of R1 arm groups) */
+.bk-col-r1-west .bk-arm-group::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 25%;
+  height: 50%;
+  width: 2px;
+  background: var(--line);
+  border-radius: 1px;
+}
+/* Bracket connector lines on East side (left edge of R1 arm groups) */
+.bk-col-r1-east .bk-arm-group::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 25%;
+  height: 50%;
+  width: 2px;
+  background: var(--line);
+  border-radius: 1px;
+}
+
+/* CF / SCF columns — center their single item */
+.bk-col-cf, .bk-col-scf {
+  justify-content: center;
+  padding: 6px 2px;
+}
+
+/* Matchup box */
+.bk-matchup {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.bk-matchup.bk-active  { border-color: var(--ice-dark); }
+.bk-matchup.bk-done    { opacity: .7; }
+.bk-matchup.bk-cf-live { border-color: rgba(245,200,66,.5); }
+
+.bk-round-label {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-30);
+  padding: 3px 6px 2px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--line);
+}
+.bk-matchup.bk-active  .bk-round-label { color: var(--ice-dark); }
+.bk-matchup.bk-cf-live .bk-round-label { color: var(--gold); background: rgba(245,200,66,.07); }
+
+.bk-team {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-60);
+  border-bottom: 1px solid rgba(36,61,92,.4);
+}
+.bk-team:last-child { border-bottom: none; }
+.bk-team img        { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
+.bk-team-code       { flex: 1; }
+.bk-score           { font-weight: 700; font-size: 13px; min-width: 14px; text-align: right; }
+.bk-team.bk-winner  { color: var(--ink); }
+.bk-team.bk-winner .bk-score { color: var(--ice); }
+.bk-team.bk-loser   { opacity: .45; }
+.bk-team.bk-leading { color: var(--ink); }
+.bk-team.bk-leading .bk-score { color: var(--gold); }
+
+/* TBD slot */
+.bk-tbd-box {
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.bk-tbd-label {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ice-dark);
+  padding: 3px 6px 2px;
+  background: rgba(76,189,182,.06);
+  border-bottom: 1px solid var(--line);
+}
+.bk-tbd-body {
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.bk-tbd-team {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-30);
+}
+.bk-tbd-icon {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--line);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: var(--ink-30);
+}
+.bk-tbd-sep {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--ink-30);
+  text-align: center;
+  letter-spacing: .06em;
+}
+
+/* Center trophy box */
+.bk-scf-box {
+  background: var(--surface2);
+  border: 1px solid rgba(245,200,66,.3);
+  border-radius: var(--radius);
+  padding: 10px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.bk-center-trophy { font-size: 28px; line-height: 1; }
+.bk-center-label  {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: var(--gold);
+  line-height: 1.1;
+}
+.bk-center-year {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--ink-30);
+  letter-spacing: .1em;
+}
+
+/* ── PHASE 2 CARD GRID ── */
+.p2-subsection-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-30);
+  margin: 24px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.p2-subsection-title:first-child { margin-top: 0; }
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 28px;
+  border-bottom: 2px solid var(--line);
+}
+.tab-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 12px 24px;
+  cursor: pointer;
+  margin-bottom: -2px;
+  transition: color .15s, border-color .15s;
+}
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active {
+  color: var(--ice);
+  border-bottom-color: var(--ice);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Placeholder Phase 2 */
+.p2-placeholder {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 48px 32px;
+  text-align: center;
+  color: var(--ink-30);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: .08em;
+}
+.p2-placeholder span {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 24px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-30);
+  letter-spacing: .06em;
+  border-top: 1px solid var(--line);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .header-inner { flex-direction: column; align-items: flex-start; }
+  .header-meta { align-items: flex-start; }
+  .podium { grid-template-columns: 1fr; }
+  .podium-1 { order: 1; }
+  .podium-2 { order: 2; }
+  .podium-3 { order: 3; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .td-bar-wrap { display: none; }
+  .standings-wrap { overflow-x: auto; }
+  .standings-table { min-width: 560px; }
+  .tab-btn { padding: 10px 16px; font-size: 10px; letter-spacing: .06em; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-title">
+      <div class="header-eyebrow">Pool NHL Boutin · Séries 2026</div>
+      <div class="header-name">Pool NHL <span>2026</span></div>
+    </div>
+    <div class="header-meta">
+      <div class="phase-badge" id="phase-badge">Phase 1 — Tour 1 terminé</div>
+      <div class="last-update" id="last-update">—</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- BRACKET -->
+  <div class="bracket-section">
+    <div class="section-title">Bracket 2026</div>
+    <div class="bracket-outer">
+      <div id="bracket-grid" class="bracket-grid"></div>
+    </div>
+  </div>
+
+  <!-- PODIUM -->
+  <div class="section-title">Classement</div>
+  <div class="podium" id="podium"></div>
+
+  <!-- TABLE -->
+  <div class="standings-wrap">
+    <table class="standings-table">
+      <thead>
+        <tr>
+          <th class="num">Rang</th>
+          <th>Participant</th>
+          <th class="num">Phase 1</th>
+          <th class="num">Phase 2</th>
+          <th class="num">Phase 3</th>
+          <th class="num">Bonus</th>
+          <th class="num">Total</th>
+          <th>Progression</th>
+        </tr>
+      </thead>
+      <tbody id="standings-body"></tbody>
+    </table>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('phase1')">Phase 1 — Résultats</button>
+    <button class="tab-btn" onclick="switchTab('phase2')">Phase 2 — Prédictions</button>
+  </div>
+
+  <!-- PANNEAU PHASE 1 -->
+  <div class="tab-panel active" id="tab-phase1">
+    <div class="section-title">Résultats des séries</div>
+    <div class="series-grid" id="series-grid"></div>
+
+    <div class="section-title" style="margin-top:40px;">Questions Bonus</div>
+    <div class="bonus-section" id="bonus-section"></div>
+  </div>
+
+  <!-- PANNEAU PHASE 2 -->
+  <div class="tab-panel" id="tab-phase2">
+    <div class="section-title">Prédictions Phase 2</div>
+    <div id="tab-phase2-content"></div>
+  </div>
+
+</main>
+
+<footer>
+  Pool NHL 2026 · CTA Cabinet Comptable · Mis à jour le <span id="footer-date">—</span>
+</footer>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+//  DATA — mis à jour à chaque import
+// ════════════════════════════════════════════════════════════════
+const POOL = {
+  updated: "2026-05-06",
+  phase: "Phase 1 terminée — Phase 2 en cours",
+
+  series: [
+    { key:"est_buf_bos",   label:"BUF vs BOS",   full:"Buffalo Sabres vs Boston Bruins",          conf:"EST",   winner:"BUF", matchs:6 },
+    { key:"est_tbl_mtl",   label:"TBL vs MTL",   full:"Tampa Bay Lightning vs Montréal Canadiens", conf:"EST",   winner:"MTL", matchs:7 },
+    { key:"est_car_ott",   label:"CAR vs OTT",   full:"Carolina Hurricanes vs Ottawa Senators",   conf:"EST",   winner:"CAR", matchs:4 },
+    { key:"est_pit_phi",   label:"PIT vs PHI",   full:"Pittsburgh Penguins vs Philadelphia Flyers",conf:"EST",   winner:"PHI", matchs:6 },
+    { key:"ouest_col_lak", label:"COL vs LAK",   full:"Colorado Avalanche vs Los Angeles Kings",  conf:"OUEST", winner:"COL", matchs:4 },
+    { key:"ouest_dal_min", label:"DAL vs MIN",   full:"Dallas Stars vs Minnesota Wild",           conf:"OUEST", winner:"MIN", matchs:6 },
+    { key:"ouest_vgk_uta", label:"VGK vs UTA",   full:"Vegas Golden Knights vs Utah Hockey Club", conf:"OUEST", winner:"VGK", matchs:6 },
+    { key:"ouest_edm_ana", label:"EDM vs ANA",   full:"Edmonton Oilers vs Anaheim Ducks",        conf:"OUEST", winner:"ANA", matchs:6 },
+  ],
+
+  bracket: {
+    west: {
+      arms: [
+        { label:'DF Ouest 1', r1:[{t1:'COL',s1:4,t2:'LAK',s2:0,w:'COL'},{t1:'DAL',s1:2,t2:'MIN',s2:4,w:'MIN'}], r2:{t1:'COL',s1:0,t2:'MIN',s2:0,w:null} },
+        { label:'DF Ouest 2', r1:[{t1:'VGK',s1:4,t2:'UTA',s2:2,w:'VGK'},{t1:'EDM',s1:2,t2:'ANA',s2:4,w:'ANA'}], r2:{t1:'VGK',s1:0,t2:'ANA',s2:0,w:null} },
+      ],
+      cf: { t1:null, t2:null, w:null },
+    },
+    east: {
+      arms: [
+        { label:'DF Est 1', r1:[{t1:'BUF',s1:4,t2:'BOS',s2:2,w:'BUF'},{t1:'TBL',s1:3,t2:'MTL',s2:4,w:'MTL'}], r2:{t1:'BUF',s1:0,t2:'MTL',s2:0,w:null} },
+        { label:'DF Est 2', r1:[{t1:'CAR',s1:4,t2:'OTT',s2:0,w:'CAR'},{t1:'PIT',s1:2,t2:'PHI',s2:4,w:'PHI'}], r2:{t1:'CAR',s1:0,t2:'PHI',s2:0,w:null} },
+      ],
+      cf: { t1:null, t2:null, w:null },
+    },
+    final: { t1:null, t2:null, w:null },
+  },
+
+  series2: [
+    { key:'df_car_phi', label:'CAR vs PHI', full:'Carolina Hurricanes vs Philadelphia Flyers', conf:'EST',   score:'0-0', winner:null, matchs:null },
+    { key:'df_buf_mtl', label:'BUF vs MTL', full:'Buffalo Sabres vs Montréal Canadiens',       conf:'EST',   score:'0-0', winner:null, matchs:null },
+    { key:'df_min_col', label:'MIN vs COL', full:'Minnesota Wild vs Colorado Avalanche',       conf:'OUEST', score:'0-0', winner:null, matchs:null },
+    { key:'df_vgk_ana', label:'VGK vs ANA', full:'Vegas Golden Knights vs Anaheim Ducks',      conf:'OUEST', score:'0-0', winner:null, matchs:null },
+  ],
+  fcSeries: [
+    { key:'fc_est',   label:'FC Est',   full:'Finale de Conference Est',   conf:'EST',   winner:null },
+    { key:'fc_ouest', label:'FC Ouest', full:'Finale de Conference Ouest', conf:'OUEST', winner:null },
+  ],
+
+  bonusQuestions: [
+    { id:"q_mcdavid",          label:"Buts de McDavid - 1er tour (le + proche gagne)",        vraiReponse: 1 },
+    { id:"q_prolongations",    label:"Matchs en prolongation - 1er tour (le + proche gagne)", vraiReponse: 13 },
+    { id:"q_minutes_punition", label:"Minutes de punition - 1er tour (le + proche gagne)",    vraiReponse: 1174 },
+    { id:"q_blanchissages",    label:"Blanchissages - 1er tour (le + proche gagne)",          vraiReponse: 5 },
+    { id:"q_bagarres",         label:"Bagarres - 1er tour (le + proche gagne)",               vraiReponse: 4 },
+  ],
+
+  participants: [
+    {
+      nom: "Pascale Laverdure", nickname: "Ti-cass",
+      pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
+      phase2: {
+              df_car_phi:  { equipe: "PHI", matchs: 6 },
+              df_buf_mtl:  { equipe: "MTL", matchs: 7 },
+              df_vgk_ana:  { equipe: "VGK", matchs: 6 },
+              df_min_col:  { equipe: "COL", matchs: 6 },
+              fc_est:  { equipe: "MTL", matchs: 7 },
+              fc_ouest:  { equipe: "VGK", matchs: 7 },
+            },
+      phase1: {
+        est_buf_bos:   { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
+        est_car_ott:   { equipe: "OTT", matchs: 7 },
+        est_pit_phi:   { equipe: "PIT", matchs: 6 },
+        ouest_col_lak: { equipe: "COL", matchs: 5 },
+        ouest_dal_min: { equipe: "DAL", matchs: 6 },
+        ouest_vgk_uta: { equipe: "VGK", matchs: 6 },
+        ouest_edm_ana: { equipe: "EDM", matchs: 5 },
+      },
+      bonus: { q_mcdavid:10, q_prolongations:3, q_minutes_punition:260, q_blanchissages:1, q_bagarres:12 },
+    },
+    {
+      nom: "Carl Boutin", nickname: "Bout'criss",
+      pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
+      phase2: {
+              df_car_phi:  { equipe: "CAR", matchs: 4 },
+              df_buf_mtl:  { equipe: "MTL", matchs: 7 },
+              df_vgk_ana:  { equipe: "VGK", matchs: 6 },
+              df_min_col:  { equipe: "COL", matchs: 6 },
+              fc_est:  { equipe: "MTL", matchs: 7 },
+              fc_ouest:  { equipe: "COL", matchs: 6 },
+            },
+      phase1: {
+        est_buf_bos:   { equipe: "BUF", matchs: 5 },
+        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
+        est_car_ott:   { equipe: "CAR", matchs: 4 },
+        est_pit_phi:   { equipe: "PHI", matchs: 7 },
+        ouest_col_lak: { equipe: "COL", matchs: 5 },
+        ouest_dal_min: { equipe: "DAL", matchs: 5 },
+        ouest_vgk_uta: { equipe: "VGK", matchs: 6 },
+        ouest_edm_ana: { equipe: "EDM", matchs: 4 },
+      },
+      bonus: { q_mcdavid:4, q_prolongations:10, q_minutes_punition:905, q_blanchissages:5, q_bagarres:7 },
+    },
+    {
+      nom: "Alexandra Rondeau", nickname: "The Rookie",
+      pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
+      phase2: {
+              df_car_phi:  { equipe: "CAR", matchs: 6 },
+              df_buf_mtl:  { equipe: "MTL", matchs: 7 },
+              df_vgk_ana:  { equipe: "VGK", matchs: 6 },
+              df_min_col:  { equipe: "COL", matchs: 6 },
+              fc_est:  { equipe: "MTL", matchs: 7 },
+              fc_ouest:  { equipe: "COL", matchs: 6 },
+            },
+      phase1: {
+        est_buf_bos:   { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl:   { equipe: "MTL", matchs: 6 },
+        est_car_ott:   { equipe: "CAR", matchs: 6 },
+        est_pit_phi:   { equipe: "PIT", matchs: 7 },
+        ouest_col_lak: { equipe: "COL", matchs: 5 },
+        ouest_dal_min: { equipe: "DAL", matchs: 5 },
+        ouest_vgk_uta: { equipe: "VGK", matchs: 6 },
+        ouest_edm_ana: { equipe: "EDM", matchs: 7 },
+      },
+      bonus: { q_mcdavid:7, q_prolongations:8, q_minutes_punition:28, q_blanchissages:4, q_bagarres:12 },
+    },
+    {
+      nom: "Valerie Boutin", nickname: "Valo Dalot",
+      pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
+      phase2: {
+              df_car_phi:  { equipe: "PHI", matchs: 6 },
+              df_buf_mtl:  { equipe: "MTL", matchs: 6 },
+              df_vgk_ana:  { equipe: "VGK", matchs: 7 },
+              df_min_col:  { equipe: "COL", matchs: 7 },
+              fc_est:  { equipe: "MTL", matchs: 7 },
+              fc_ouest:  { equipe: "COL", matchs: 6 },
+            },
+      phase1: {
+        est_buf_bos:   { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
+        est_car_ott:   { equipe: "CAR", matchs: 5 },
+        est_pit_phi:   { equipe: "PIT", matchs: 6 },
+        ouest_col_lak: { equipe: "COL", matchs: 5 },
+        ouest_dal_min: { equipe: "MIN", matchs: 7 },
+        ouest_vgk_uta: { equipe: "VGK", matchs: 6 },
+        ouest_edm_ana: { equipe: "EDM", matchs: 7 },
+      },
+      bonus: { q_mcdavid:3, q_prolongations:6, q_minutes_punition:60, q_blanchissages:9, q_bagarres:15 },
+    },
+    {
+      nom: "Penelope Landry", nickname: "Penny",
+      pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
+      phase2: {
+              df_car_phi:  { equipe: "CAR", matchs: 6 },
+              df_buf_mtl:  { equipe: "MTL", matchs: 6 },
+              df_vgk_ana:  { equipe: "ANA", matchs: 6 },
+              df_min_col:  { equipe: "MIN", matchs: 6 },
+              fc_est:  { equipe: "MTL", matchs: 7 },
+              fc_ouest:  { equipe: "MIN", matchs: 6 },
+            },
+      phase1: {
+        est_buf_bos:   { equipe: "BUF", matchs: 5 },
+        est_tbl_mtl:   { equipe: "MTL", matchs: 6 },
+        est_car_ott:   { equipe: "CAR", matchs: 5 },
+        est_pit_phi:   { equipe: "PIT", matchs: 6 },
+        ouest_col_lak: { equipe: "COL", matchs: 4 },
+        ouest_dal_min: { equipe: "MIN", matchs: 6 },
+        ouest_vgk_uta: { equipe: "UTA", matchs: 7 },
+        ouest_edm_ana: { equipe: "EDM", matchs: 6 },
+      },
+      bonus: { q_mcdavid:3, q_prolongations:4, q_minutes_punition:660, q_blanchissages:8, q_bagarres:7 },
+    },
+    {
+      nom: "Maxime Charland", nickname: "Maxime Charland",
+      pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
+      phase2: null,
+      phase1: {
+        est_buf_bos:   { equipe: "BUF", matchs: 5 },
+        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
+        est_car_ott:   { equipe: "CAR", matchs: 6 },
+        est_pit_phi:   { equipe: "PHI", matchs: 7 },
+        ouest_col_lak: { equipe: "COL", matchs: 4 },
+        ouest_dal_min: { equipe: "MIN", matchs: 7 },
+        ouest_vgk_uta: { equipe: "UTA", matchs: 6 },
+        ouest_edm_ana: { equipe: "ANA", matchs: 5 },
+      },
+      bonus: { q_mcdavid:5, q_prolongations:12, q_minutes_punition:500, q_blanchissages:6, q_bagarres:28 },
+    },
+    {
+      nom: "Sonia Vallerand", nickname: "Vallerand",
+      pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
+      phase2: {
+              df_car_phi:  { equipe: "CAR", matchs: 6 },
+              df_buf_mtl:  { equipe: "BUF", matchs: 5 },
+              df_vgk_ana:  { equipe: "ANA", matchs: 6 },
+              df_min_col:  { equipe: "COL", matchs: 6 },
+              fc_est:  { equipe: "BUF", matchs: 7 },
+              fc_ouest:  { equipe: "ANA", matchs: 5 },
+            },
+      phase1: {
+        est_buf_bos:   { equipe: "BOS", matchs: 5 },
+        est_tbl_mtl:   { equipe: "MTL", matchs: 5 },
+        est_car_ott:   { equipe: "CAR", matchs: 5 },
+        est_pit_phi:   { equipe: "PHI", matchs: 6 },
+        ouest_col_lak: { equipe: "LAK", matchs: 6 },
+        ouest_dal_min: { equipe: "DAL", matchs: 5 },
+        ouest_vgk_uta: { equipe: "VGK", matchs: 5 },
+        ouest_edm_ana: { equipe: "EDM", matchs: 6 },
+      },
+      bonus: { q_mcdavid:1, q_prolongations:1, q_minutes_punition:2, q_blanchissages:0, q_bagarres:2 },
+    },
+    {
+      nom: "Pascal Bernier", nickname: "Biquette",
+      pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
+      phase2: {
+              df_car_phi:  { equipe: "CAR", matchs: 5 },
+              df_buf_mtl:  { equipe: "MTL", matchs: 7 },
+              df_vgk_ana:  { equipe: "ANA", matchs: 6 },
+              df_min_col:  { equipe: "MIN", matchs: 6 },
+              fc_est:  { equipe: "MTL", matchs: 6 },
+              fc_ouest:  { equipe: "MIN", matchs: 6 },
+            },
+      phase1: {
+        est_buf_bos:   { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
+        est_car_ott:   { equipe: "CAR", matchs: 6 },
+        est_pit_phi:   { equipe: "PIT", matchs: 5 },
+        ouest_col_lak: { equipe: "COL", matchs: 5 },
+        ouest_dal_min: { equipe: "DAL", matchs: 6 },
+        ouest_vgk_uta: { equipe: "VGK", matchs: 5 },
+        ouest_edm_ana: { equipe: "ANA", matchs: 6 },
+      },
+      bonus: { q_mcdavid:2, q_prolongations:3, q_minutes_punition:17, q_blanchissages:6, q_bagarres:5 },
+    },
+    {
+      nom: "Chloe Jodoin", nickname: "Jodoin",
+      pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
+      phase2: {
+              df_car_phi:  { equipe: "CAR", matchs: 5 },
+              df_buf_mtl:  { equipe: "MTL", matchs: 7 },
+              df_vgk_ana:  { equipe: "VGK", matchs: 6 },
+              df_min_col:  { equipe: "COL", matchs: 5 },
+              fc_est:  { equipe: "MTL", matchs: 7 },
+              fc_ouest:  { equipe: "COL", matchs: 5 },
+            },
+      phase1: {
+        est_buf_bos:   { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
+        est_car_ott:   { equipe: "CAR", matchs: 6 },
+        est_pit_phi:   { equipe: "PHI", matchs: 5 },
+        ouest_col_lak: { equipe: "COL", matchs: 4 },
+        ouest_dal_min: { equipe: "DAL", matchs: 5 },
+        ouest_vgk_uta: { equipe: "VGK", matchs: 5 },
+        ouest_edm_ana: { equipe: "EDM", matchs: 6 },
+      },
+      bonus: { q_mcdavid:4, q_prolongations:6, q_minutes_punition:100, q_blanchissages:1, q_bagarres:11 },
+    },
+    {
+      nom: "Vincent Boutin", nickname: "BOOTS - PUCK YEAH",
+      pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
+      phase2: {
+              df_car_phi:  { equipe: "CAR", matchs: 6 },
+              df_buf_mtl:  { equipe: "MTL", matchs: 7 },
+              df_vgk_ana:  { equipe: "ANA", matchs: 6 },
+              df_min_col:  { equipe: "COL", matchs: 6 },
+              fc_est:  { equipe: "MTL", matchs: 7 },
+              fc_ouest:  { equipe: "COL", matchs: 7 },
+            },
+      phase1: {
+        est_buf_bos:   { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
+        est_car_ott:   { equipe: "CAR", matchs: 6 },
+        est_pit_phi:   { equipe: "PIT", matchs: 7 },
+        ouest_col_lak: { equipe: "COL", matchs: 5 },
+        ouest_dal_min: { equipe: "DAL", matchs: 7 },
+        ouest_vgk_uta: { equipe: "VGK", matchs: 6 },
+        ouest_edm_ana: { equipe: "EDM", matchs: 6 },
+      },
+      bonus: { q_mcdavid:7, q_prolongations:11, q_minutes_punition:800, q_blanchissages:7, q_bagarres:2 },
+    },
+    {
+      nom: "Patrick Phaneuf", nickname: "Roadrunner",
+      pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
+      phase2: {
+              df_car_phi:  { equipe: "CAR", matchs: 6 },
+              df_buf_mtl:  { equipe: "MTL", matchs: 6 },
+              df_vgk_ana:  { equipe: "VGK", matchs: 6 },
+              df_min_col:  { equipe: "COL", matchs: 5 },
+              fc_est:  { equipe: "MTL", matchs: 6 },
+              fc_ouest:  { equipe: "COL", matchs: 6 },
+            },
+      phase1: {
+        est_buf_bos:   { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl:   { equipe: "MTL", matchs: 6 },
+        est_car_ott:   { equipe: "CAR", matchs: 5 },
+        est_pit_phi:   { equipe: "PIT", matchs: 7 },
+        ouest_col_lak: { equipe: "COL", matchs: 6 },
+        ouest_dal_min: { equipe: "DAL", matchs: 7 },
+        ouest_vgk_uta: { equipe: "VGK", matchs: 7 },
+        ouest_edm_ana: { equipe: "EDM", matchs: 6 },
+      },
+      bonus: { q_mcdavid:6, q_prolongations:6, q_minutes_punition:235, q_blanchissages:4, q_bagarres:3 },
+    },
+  ],
+};
+// ════════════════════════════════════════════════════════════════
+//  SCORING
+// ════════════════════════════════════════════════════════════════
+function calcScore(p) {
+  let p1 = 0;
+  POOL.series.forEach(s => {
+    const pred = p.phase1[s.key];
+    if (!pred || !s.winner) return;
+    if (pred.equipe === s.winner) {
+      p1 += 3;
+      if (s.matchs && pred.matchs === s.matchs) p1 += 2;
+    }
+  });
+  p.pts.phase1 = p1;
+
+  let p2 = 0;
+  if (p.phase2) {
+    POOL.series2.forEach(s => {
+      const pred = p.phase2[s.key];
+      if (!pred || !s.winner) return;
+      if (pred.equipe === s.winner) {
+        p2 += 4;
+        if (s.matchs && pred.matchs === s.matchs) p2 += 2;
+      }
+    });
+    POOL.fcSeries.forEach(s => {
+      const pred = p.phase2[s.key];
+      if (!pred || !s.winner) return;
+      if (pred.equipe === s.winner) {
+        p2 += 5;
+        if (s.matchs && pred.matchs === s.matchs) p2 += 2;
+      }
+    });
+  }
+  p.pts.phase2 = p2;
+
+  p.pts.bonus = calcBonus(p);
+  return p.pts.phase1 + p.pts.phase2 + p.pts.phase3 + p.pts.bonus;
+}
+
+function getBonusWinners(q) {
+  if (q.vraiReponse === null || q.vraiReponse === undefined) return [];
+  let minEcart = Infinity;
+  POOL.participants.forEach(p => {
+    const ans = p.bonus[q.id];
+    if (ans === null || ans === undefined) return;
+    const ecart = Math.abs(ans - q.vraiReponse);
+    if (ecart < minEcart) minEcart = ecart;
+  });
+  if (minEcart === Infinity) return [];
+  return POOL.participants
+    .filter(p => p.bonus[q.id] !== null && p.bonus[q.id] !== undefined && Math.abs(p.bonus[q.id] - q.vraiReponse) === minEcart)
+    .map(p => p.nom);
+}
+
+function calcBonus(p) {
+  let total = 0;
+  POOL.bonusQuestions.forEach(q => {
+    if (q.vraiReponse === null || q.vraiReponse === undefined) return;
+    const winners = getBonusWinners(q);
+    if (winners.includes(p.nom)) total += 2;
+  });
+  return total;
+}
+
+function getBonusResult(p, q) {
+  if (q.vraiReponse === null || q.vraiReponse === undefined) return 'pending';
+  const winners = getBonusWinners(q);
+  return winners.includes(p.nom) ? 'correct' : 'wrong';
+}
+
+function getPredResult(pred, serie) {
+  if (!serie.winner) return 'pending';
+  if (pred.equipe === serie.winner && pred.matchs === serie.matchs) return 'correct';
+  if (pred.equipe === serie.winner) return 'partial';
+  return 'wrong';
+}
+
+function resultLabel(r) {
+  return { correct:'✓ Parfait', partial:'✓ Équipe', wrong:'✗ Raté', pending:'En cours' }[r];
+}
+function resultClass(r) {
+  return 'result-' + r;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════════════════════
+function teamLogo(code, size = 'sm') {
+  const cls = size === 'lg' ? 'team-logo' : 'team-logo-sm';
+  return `<img class="${cls}" src="https://assets.nhle.com/logos/nhl/svg/${code}_dark.svg" alt="${code}" onerror="this.style.display='none'">`;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  BRACKET
+// ════════════════════════════════════════════════════════════════
+function renderBracket() {
+  const b  = POOL.bracket;
+  const el = document.getElementById('bracket-grid');
+
+  // ── helpers ────────────────────────────────────────────────
+  function logo(code) {
+    return `<img src="https://assets.nhle.com/logos/nhl/svg/${code}_dark.svg" alt="${code}" onerror="this.style.display='none'">`;
+  }
+
+  function matchupBox(m, label) {
+    const done = !!m.w;
+    const active = !done && (m.s1 > 0 || m.s2 > 0);
+    const cls = done ? 'bk-done' : (active ? 'bk-active' : '');
+    const t1 = m.w === m.t1 ? 'bk-winner' : (done ? 'bk-loser' : (m.s1 > m.s2 ? 'bk-leading' : ''));
+    const t2 = m.w === m.t2 ? 'bk-winner' : (done ? 'bk-loser' : (m.s2 > m.s1 ? 'bk-leading' : ''));
+    return `<div class="bk-matchup ${cls}">
+      <div class="bk-round-label">${label}</div>
+      <div class="bk-team ${t1}">${logo(m.t1)}<span class="bk-team-code">${m.t1}</span><span class="bk-score">${m.s1}</span></div>
+      <div class="bk-team ${t2}">${logo(m.t2)}<span class="bk-team-code">${m.t2}</span><span class="bk-score">${m.s2}</span></div>
+    </div>`;
+  }
+
+  function tbdBox(label) {
+    return `<div class="bk-tbd-box">
+      <div class="bk-tbd-label">${label}</div>
+      <div class="bk-tbd-body">
+        <div class="bk-tbd-team"><div class="bk-tbd-icon">?</div></div>
+        <div class="bk-tbd-sep">— vs —</div>
+        <div class="bk-tbd-team"><div class="bk-tbd-icon">?</div></div>
+      </div>
+    </div>`;
+  }
+
+  function cfBox(cf, label) {
+    return cf.t1
+      ? matchupBox({ t1:cf.t1, s1:'', t2:cf.t2, s2:'', w:cf.w }, label)
+      : tbdBox(label);
+  }
+
+  // ── West R1 column ─────────────────────────────────────────
+  const wr1 = `<div class="bk-col bk-col-r1-west">
+    <div class="bk-arm-group">
+      ${matchupBox(b.west.arms[0].r1[0], 'R1')}
+      ${matchupBox(b.west.arms[0].r1[1], 'R1')}
+    </div>
+    <div class="bk-arm-group">
+      ${matchupBox(b.west.arms[1].r1[0], 'R1')}
+      ${matchupBox(b.west.arms[1].r1[1], 'R1')}
+    </div>
+  </div>`;
+
+  // ── West R2 column ─────────────────────────────────────────
+  const wr2 = `<div class="bk-col">
+    ${matchupBox(b.west.arms[0].r2, b.west.arms[0].label)}
+    ${matchupBox(b.west.arms[1].r2, b.west.arms[1].label)}
+  </div>`;
+
+  // ── West CF column ─────────────────────────────────────────
+  const wcf = `<div class="bk-col bk-col-cf">${cfBox(b.west.cf, 'FC OUEST')}</div>`;
+
+  // ── Center SCF ─────────────────────────────────────────────
+  const scf = `<div class="bk-col bk-col-scf">
+    <div class="bk-scf-box">
+      <div class="bk-center-trophy">🏆</div>
+      <div class="bk-center-label">COUPE<br>STANLEY</div>
+      <div class="bk-center-year">2026</div>
+      ${b.final.t1
+        ? matchupBox({t1:b.final.t1,s1:'',t2:b.final.t2,s2:'',w:b.final.w},'FINALE')
+        : `<div style="font-family:var(--font-mono);font-size:9px;color:var(--ink-30);margin-top:4px;letter-spacing:.06em;">À déterminer</div>`}
+    </div>
+  </div>`;
+
+  // ── East CF column ─────────────────────────────────────────
+  const ecf = `<div class="bk-col bk-col-cf">${cfBox(b.east.cf, 'FC EST')}</div>`;
+
+  // ── East R2 column ─────────────────────────────────────────
+  const er2 = `<div class="bk-col">
+    ${matchupBox(b.east.arms[0].r2, b.east.arms[0].label)}
+    ${matchupBox(b.east.arms[1].r2, b.east.arms[1].label)}
+  </div>`;
+
+  // ── East R1 column ─────────────────────────────────────────
+  const er1 = `<div class="bk-col bk-col-r1-east">
+    <div class="bk-arm-group">
+      ${matchupBox(b.east.arms[0].r1[0], 'R1')}
+      ${matchupBox(b.east.arms[0].r1[1], 'R1')}
+    </div>
+    <div class="bk-arm-group">
+      ${matchupBox(b.east.arms[1].r1[0], 'R1')}
+      ${matchupBox(b.east.arms[1].r1[1], 'R1')}
+    </div>
+  </div>`;
+
+  el.innerHTML = wr1 + wr2 + wcf + scf + ecf + er2 + er1;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  PHASE 2 TAB
+// ════════════════════════════════════════════════════════════════
+function renderPhase2Tab() {
+  const el = document.getElementById('tab-phase2-content');
+  if (!el) return;
+
+  // DF cards
+  const dfCards = POOL.series2.map(s => {
+    const picks = POOL.participants.map(p => {
+      const pred = p.phase2 && p.phase2[s.key];
+      if (!pred) return `<span class="pick-bubble"><span class="bubble-pred">—</span><span class="bubble-name">${p.nickname}</span></span>`;
+      const isWinner = s.winner && pred.equipe === s.winner;
+      return `<span class="pick-bubble ${isWinner ? 'winner' : ''}">
+        <span class="bubble-pred">
+          <img class="team-logo-sm" src="https://assets.nhle.com/logos/nhl/svg/${pred.equipe}_dark.svg" alt="${pred.equipe}" onerror="this.style.display='none'">
+          ${pred.equipe} ×${pred.matchs}
+        </span>
+        <span class="bubble-name">${p.nickname}</span>
+      </span>`;
+    }).join('');
+
+    return `<div class="series-card">
+      <div class="series-card-header">
+        <span class="series-card-label">
+          ${teamLogo(s.label.split(' vs ')[0])}
+          <span class="series-card-label-text">${s.label.split(' vs ')[0]}</span>
+          <span class="series-card-label-text" style="opacity:.5">vs</span>
+          ${teamLogo(s.label.split(' vs ')[1])}
+          <span class="series-card-label-text">${s.label.split(' vs ')[1]}</span>
+        </span>
+        <span class="series-card-conf conf-${s.conf.toLowerCase()}">${s.conf} · ${s.score}</span>
+      </div>
+      <div class="series-matchup">${s.full}</div>
+      <div class="series-result">
+        ${s.winner
+          ? `<span class="series-winner">🏆 ${teamLogo(s.winner,'lg')} ${s.winner} en ${s.matchs}</span>`
+          : `<span class="series-pending">En cours…</span>`}
+      </div>
+      <div class="series-picks">${picks}</div>
+    </div>`;
+  }).join('');
+
+  // FC cards
+  const fcCards = POOL.fcSeries.map(s => {
+    const picks = POOL.participants.map(p => {
+      const pick = p.phase2 && p.phase2[s.key];
+      if (!pick) return `<span class="pick-bubble"><span class="bubble-pred">—</span><span class="bubble-name">${p.nickname}</span></span>`;
+      const isWinner = s.winner && pick.equipe === s.winner;
+      return `<span class="pick-bubble ${isWinner ? 'winner' : ''}">
+        <span class="bubble-pred">
+          <img class="team-logo-sm" src="https://assets.nhle.com/logos/nhl/svg/${pick.equipe}_dark.svg" alt="${pick.equipe}" onerror="this.style.display='none'">
+          ${pick.equipe} ×${pick.matchs}
+        </span>
+        <span class="bubble-name">${p.nickname}</span>
+      </span>`;
+    }).join('');
+
+    return `<div class="series-card">
+      <div class="series-card-header">
+        <span class="series-card-label-text">${s.full}</span>
+        <span class="series-card-conf conf-${s.conf.toLowerCase()}">${s.conf}</span>
+      </div>
+      <div class="series-result" style="padding:12px 14px 0;">
+        ${s.winner
+          ? `<span class="series-winner">🏆 ${teamLogo(s.winner,'lg')} ${s.winner}</span>`
+          : `<span class="series-pending">À déterminer…</span>`}
+      </div>
+      <div class="series-picks">${picks}</div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="p2-subsection-title">Demi-finales</div>
+    <div class="series-grid" style="margin-bottom:0;">${dfCards}</div>
+    <div class="p2-subsection-title">Finales de conférence</div>
+    <div class="series-grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr));margin-bottom:0;">${fcCards}</div>`;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  TABS
+// ════════════════════════════════════════════════════════════════
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  const idx = id === 'phase1' ? 0 : 1;
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+}
+
+// ════════════════════════════════════════════════════════════════
+//  RENDER
+// ════════════════════════════════════════════════════════════════
+function render() {
+  // Sort
+  const sorted = [...POOL.participants].map(p => ({ ...p, total: calcScore(p) }))
+    .sort((a,b) => b.total - a.total);
+  const maxPts = sorted[0]?.total || 1;
+
+  // Update meta
+  document.getElementById('phase-badge').textContent = POOL.phase;
+  const d = new Date(POOL.updated + 'T12:00:00');
+  const fmt = d.toLocaleDateString('fr-CA', { year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('last-update').textContent = 'Mis à jour le ' + fmt;
+  document.getElementById('footer-date').textContent = fmt;
+
+  // Podium (top 3)
+  const podiumEl = document.getElementById('podium');
+  podiumEl.innerHTML = '';
+  const allZero = !sorted.length || sorted[0].total === 0;
+  const icons = ['🥇','🥈','🥉'];
+  const podiumSlots = allZero
+    ? [{ cls:'podium-2', rank:2 }, { cls:'podium-1', rank:1 }, { cls:'podium-3', rank:3 }]
+    : (() => {
+        const podiumOrder = sorted.length >= 2 ? [sorted[1], sorted[0], sorted[2]].filter(Boolean) : sorted;
+        const rankOf = p => sorted.indexOf(p) + 1;
+        return podiumOrder.map(p => ({ cls: ['podium-1','podium-2','podium-3'][rankOf(p)-1] || 'podium-3', rank: rankOf(p), p }));
+      })();
+
+  podiumSlots.forEach(slot => {
+    const { cls, rank, p } = slot;
+    podiumEl.innerHTML += `
+      <div class="podium-card ${cls}">
+        <span class="podium-trophy">${icons[rank-1] || '🏒'}</span>
+        <div class="podium-rank">${rank}</div>
+        <div class="podium-name">${p ? p.nom : '&nbsp;'}</div>
+        <div class="podium-nickname">${p && p.nickname !== p.nom ? p.nickname : '&nbsp;'}</div>
+        <div class="podium-pts">${p ? p.total : 0}</div>
+        <div class="podium-pts-label">points</div>
+        <div class="podium-breakdown">
+          <div class="breakdown-chip">P1 <strong>${p ? p.pts.phase1 : '—'}</strong></div>
+          <div class="breakdown-chip">P2 <strong>${p ? (p.pts.phase2 || '—') : '—'}</strong></div>
+          <div class="breakdown-chip">P3 <strong>${p ? (p.pts.phase3 || '—') : '—'}</strong></div>
+          <div class="breakdown-chip">Bonus <strong>${p ? (p.pts.bonus || '—') : '—'}</strong></div>
+        </div>
+      </div>`;
+  });
+
+  // Table
+  const tbody = document.getElementById('standings-body');
+  tbody.innerHTML = '';
+  sorted.forEach((p, idx) => {
+    const rank = idx + 1;
+    const rankClass = rank <= 3 ? ` r${rank}` : '';
+    const pct = maxPts > 0 ? Math.round((p.total / maxPts) * 100) : 0;
+    const trId = `row-${idx}`;
+    const detailId = `detail-${idx}`;
+
+    tbody.innerHTML += `
+      <tr onclick="toggleDetail(${idx})" id="${trId}">
+        <td class="td-rank${rankClass}">${rank}</td>
+        <td class="td-name">
+          ${p.nom}
+          ${p.nickname !== p.nom ? `<span class="td-nickname">${p.nickname}</span>` : ''}
+        </td>
+        <td class="td-phase ${p.pts.phase1 ? 'has-pts' : ''}">${p.pts.phase1 || '—'}</td>
+        <td class="td-phase ${p.pts.phase2 ? 'has-pts' : ''}">${p.pts.phase2 || '—'}</td>
+        <td class="td-phase ${p.pts.phase3 ? 'has-pts' : ''}">${p.pts.phase3 || '—'}</td>
+        <td class="td-phase ${p.pts.bonus ? 'has-pts' : ''}">${p.pts.bonus || '—'}</td>
+        <td class="td-pts">${p.total}</td>
+        <td class="td-bar-wrap">
+          <div class="td-bar"><div class="td-bar-fill" style="width:${pct}%"></div></div>
+        </td>
+      </tr>
+      <tr class="detail-row" id="detail-row-${idx}">
+        <td colspan="8">
+          <div class="detail-panel" id="${detailId}">
+            ${renderDetail(p)}
+          </div>
+        </td>
+      </tr>`;
+  });
+
+  // Series grid
+  const seriesGrid = document.getElementById('series-grid');
+  seriesGrid.innerHTML = '';
+  POOL.series.forEach(s => {
+    const picks = POOL.participants.map(p => {
+      const pred = p.phase1[s.key];
+      if (!pred) return '';
+      const isWinner = s.winner && pred.equipe === s.winner;
+      return `<span class="pick-bubble ${isWinner ? 'winner' : ''}"><span class="bubble-pred">${teamLogo(pred.equipe)} ${pred.equipe} ×${pred.matchs}</span><span class="bubble-name">${p.nickname}</span></span>`;
+    }).join('');
+
+    seriesGrid.innerHTML += `
+      <div class="series-card">
+        <div class="series-card-header">
+          <span class="series-card-label">${(() => { const t = s.label.split(' vs '); return teamLogo(t[0]) + ' <span class="series-card-label-text">' + t[0] + '</span> <span class="series-card-label-text" style="opacity:.5">vs</span> ' + teamLogo(t[1]) + ' <span class="series-card-label-text">' + t[1] + '</span>'; })()}</span>
+          <span class="series-card-conf conf-${s.conf.toLowerCase()}">${s.conf}</span>
+        </div>
+        <div class="series-matchup">${s.full}</div>
+        <div class="series-result">
+          ${s.winner
+            ? `<span class="series-winner">🏆 ${teamLogo(s.winner, 'lg')} ${s.winner} en ${s.matchs}</span>`
+            : `<span class="series-pending">En cours…</span>`}
+        </div>
+        <div class="series-picks">${picks}</div>
+      </div>`;
+  });
+
+  // Bonus questions section
+  const bonusSectionEl = document.getElementById('bonus-section');
+  bonusSectionEl.innerHTML = '';
+  POOL.bonusQuestions.forEach(q => {
+    const winners = getBonusWinners(q);
+    const hasAnswer = q.vraiReponse !== null && q.vraiReponse !== undefined;
+    const picks = POOL.participants.map(p => {
+      const ans = p.bonus[q.id];
+      if (ans === null || ans === undefined) return '';
+      const isWinner = hasAnswer && winners.includes(p.nom);
+      return `<span class="bonus-pick-bubble ${isWinner ? 'winner' : ''}"><span class="bp-val">${ans}</span><span class="bp-name">${p.nickname}</span></span>`;
+    }).join('');
+
+    const answerBlock = hasAnswer
+      ? `<span class="bonus-true-answer">Réponse : <strong>${q.vraiReponse}</strong></span>`
+      : `<span class="bonus-card-pts">2 pts</span>`;
+
+    bonusSectionEl.innerHTML += `
+      <div class="bonus-card">
+        <div class="bonus-card-header">
+          <span class="bonus-card-q">${q.label}</span>
+          ${answerBlock}
+        </div>
+        <div class="bonus-picks-row">${picks}</div>
+      </div>`;
+  });
+}
+
+function renderDetail(p) {
+  const seriesRows = POOL.series.map(s => {
+    const pred = p.phase1[s.key];
+    if (!pred) return '';
+    const r = getPredResult(pred, s);
+    return `<div class="pred-row">
+      <span class="pred-serie">${s.label}</span>
+      <span class="pred-pick">
+        <span>${pred.equipe}</span>
+        <span class="pred-matchs">×${pred.matchs}</span>
+      </span>
+      <span class="pred-result ${resultClass(r)}">${resultLabel(r)}</span>
+    </div>`;
+  }).join('');
+
+  const bonusRows = POOL.bonusQuestions.map(q => {
+    const ans = p.bonus[q.id];
+    const r = getBonusResult(p, q);
+    const trueAns = (q.vraiReponse !== null && q.vraiReponse !== undefined) ? q.vraiReponse : '?';
+    return `<div class="bonus-item">
+      <span class="bonus-q-text">${q.label}<br><span style="font-size:10px;color:var(--ink-30);font-family:var(--font-mono);">vraie réponse : ${trueAns}</span></span>
+      <span class="bonus-answer">${ans ?? '—'}</span>
+      <span class="pred-result ${resultClass(r)}">${r === 'correct' ? '✓ +2' : r === 'pending' ? '—' : '✗ 0'}</span>
+    </div>`;
+  }).join('');
+
+  return `<div class="detail-grid">
+    <div>
+      <div class="detail-section-title">Prédictions Phase 1</div>
+      ${seriesRows}
+    </div>
+    <div>
+      <div class="detail-section-title">Questions Bonus</div>
+      <div class="bonus-grid">${bonusRows}</div>
+    </div>
+  </div>`;
+}
+
+function toggleDetail(idx) {
+  const panel = document.getElementById(`detail-${idx}`);
+  const row = document.getElementById(`row-${idx}`);
+  const isOpen = panel.classList.contains('open');
+  document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.standings-table tbody tr:not(.detail-row)').forEach(r => r.classList.remove('active'));
+  if (!isOpen) {
+    panel.classList.add('open');
+    row.classList.add('active');
+  }
+}
+
+render();
+renderBracket();
+renderPhase2Tab();
+</script>
+</body>
+</html>
