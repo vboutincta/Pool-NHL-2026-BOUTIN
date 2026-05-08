@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-update_scores.py — Met à jour les scores R2 du bracket NHL dans index.html
-Appelé chaque nuit à 3h AM EDT par GitHub Actions.
+update_scores_boutin.py — Met à jour les scores R2 du bracket NHL dans index.html
+Pool famille Boutin. Appelé chaque nuit à 3h AM EDT par GitHub Actions.
 """
 
 import json
@@ -51,9 +51,7 @@ def fetch_bracket():
 
 
 def parse_r2_series(data):
-    """Extrait les séries du 2e tour depuis la réponse de l'API NHL.
-    Les séries sont dans data['series'] avec seriesAbbrev == 'R2'.
-    """
+    """Extrait les séries du 2e tour depuis la réponse de l'API NHL."""
     results = {}
     all_series = data.get('series', [])
     for series in all_series:
@@ -67,7 +65,6 @@ def parse_r2_series(data):
             continue
         s1 = series.get('topSeedWins', 0) or 0
         s2 = series.get('bottomSeedWins', 0) or 0
-        # Déterminer le gagnant via winningTeamId
         winning_id = series.get('winningTeamId')
         winner = None
         if winning_id:
@@ -77,7 +74,7 @@ def parse_r2_series(data):
                 winner = t2
         key = frozenset([t1, t2])
         results[key] = {'t1': t1, 't2': t2, 's1': s1, 's2': s2, 'w': winner}
-        print(f"  {t1} {s1}–{s2} {t2}  winner={winner or 'en cours'}")
+        print(f"  {t1} {s1}-{s2} {t2}  winner={winner or 'en cours'}")
     return results
 
 
@@ -85,14 +82,12 @@ def update_bracket_r2(html, t1, t2, s1, s2, winner):
     """Met à jour r2:{...} dans POOL.bracket pour la paire t1/t2."""
     w_str = f"'{winner}'" if winner else 'null'
 
-    # Essai ordre t1/t2
     pat = rf"(r2:\{{t1:'{re.escape(t1)}',s1:)\d+(,t2:'{re.escape(t2)}',s2:)\d+(,w:)(?:null|'[A-Z]{{2,3}}')(\}})"
     new = rf"\g<1>{s1}\g<2>{s2}\g<3>{w_str}\g<4>"
     result, n = re.subn(pat, new, html)
     if n > 0:
         return result, True
 
-    # Essai ordre t2/t1 (top seed peut être dans n'importe quel sens)
     pat = rf"(r2:\{{t1:'{re.escape(t2)}',s1:)\d+(,t2:'{re.escape(t1)}',s2:)\d+(,w:)(?:null|'[A-Z]{{2,3}}')(\}})"
     new = rf"\g<1>{s2}\g<2>{s1}\g<3>{w_str}\g<4>"
     result, n = re.subn(pat, new, html)
@@ -105,7 +100,7 @@ def update_bracket_r2(html, t1, t2, s1, s2, winner):
 
 def update_series2(html, series2_key, s1, s2, winner, t1):
     """Met à jour score/winner/matchs dans POOL.series2."""
-    score_str = f"{s1}–{s2}"  # tiret demi-cadratin
+    score_str = f"{s1}-{s2}"   # tiret simple (format du pool Boutin)
     winner_str = f"'{winner}'" if winner else 'null'
     total_matchs = s1 + s2 if (s1 + s2) > 0 else 0
     matchs_str = str(total_matchs) if total_matchs > 0 else 'null'
@@ -125,7 +120,7 @@ def update_series2(html, series2_key, s1, s2, winner, t1):
 
 
 def update_last_update(html):
-    """Met à jour la date de dernière mise à jour dans le header."""
+    """Met à jour la date de dernière mise à jour dans le header et footer."""
     now = datetime.now(timezone(timedelta(hours=-4)))  # EDT
     date_en = now.strftime('%B %-d, %Y')
     date_fr = date_en
@@ -134,13 +129,11 @@ def update_last_update(html):
     heure = now.strftime('%H:%M')
     label = f"Mis à jour le {date_fr} à {heure} EDT"
 
-    # Met à jour le span dans le header
     pat = r'(id="last-update">)[^<]*(</)'
     result, n = re.subn(pat, rf'\g<1>{label}\g<2>', html)
     if n > 0:
         html = result
 
-    # Met à jour le span dans le footer
     pat2 = r'(id="footer-date">)[^<]*(</)'
     result2, n2 = re.subn(pat2, rf'\g<1>{label}\g<2>', html)
     if n2 > 0:
@@ -150,7 +143,7 @@ def update_last_update(html):
 
 
 def main():
-    print("=== Mise à jour scores NHL ===")
+    print("=== Mise à jour scores NHL — Pool Boutin ===")
     print(f"Fichier cible: {HTML_FILE}")
 
     try:
@@ -160,21 +153,15 @@ def main():
         print(f"Erreur API NHL: {e}", file=sys.stderr)
         sys.exit(1)
 
-    # DEBUG — structure de la réponse API
-    print(f"\nClés racine API: {list(data.keys())}")
+    print(f"Clés racine API: {list(data.keys())}")
     all_series = data.get('series', [])
-    print(f"Séries totales à la racine: {len(all_series)}")
-    if all_series:
-        print(f"Clés d'une série: {list(all_series[0].keys())}")
-        for s in all_series:
-            print(f"  {s}")
+    print(f"Séries totales: {len(all_series)}")
 
     series = parse_r2_series(data)
     print(f"\nSéries R2 trouvées: {len(series)}")
 
     if not series:
-        print("Aucune série R2 dans la réponse API. Rien à mettre à jour.")
-        sys.exit(0)
+        print("Aucune série R2. Mise à jour de la date uniquement.")
 
     with open(HTML_FILE, 'r', encoding='utf-8') as f:
         html = f.read()
@@ -188,25 +175,22 @@ def main():
         if key in R2_BRACKET_MAP:
             html, ok = update_bracket_r2(html, t1, t2, s1, s2, winner)
             if ok:
-                print(f"  Bracket mis à jour: {t1} {s1}–{s2} {t2}")
+                print(f"  ✓ Bracket: {t1} {s1}-{s2} {t2}")
                 changed = True
 
         s2_key = SERIES2_KEY_MAP.get(key)
         if s2_key:
             html, ok = update_series2(html, s2_key, s1, s2, winner, t1)
             if ok:
-                print(f"  Series2 mis à jour: {s2_key}")
+                print(f"  ✓ Series2: {s2_key}")
                 changed = True
 
     html = update_last_update(html)
-    changed = True  # La date change toujours
 
     with open(HTML_FILE, 'w', encoding='utf-8') as f:
         f.write(html)
 
     print("\n✓ index.html sauvegardé.")
-    if not changed:
-        print("(Aucun score modifié — date mise à jour uniquement)")
 
 
 if __name__ == '__main__':
