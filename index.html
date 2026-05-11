@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pool NHL Boutin 2026 — Classement</title>
+<title>Pool NHL 2026 Boutin — Classement</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -315,6 +315,7 @@ main {
   text-align: center !important;
 }
 .td-phase.has-pts { color: var(--ice); font-weight: 500; }
+.td-phase.has-penalty { color: var(--red); font-weight: 600; }
 .td-bar-wrap {
   width: 120px;
 }
@@ -351,7 +352,7 @@ main {
 .detail-panel.open { display: block; }
 .detail-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
 }
 .detail-section-title {
@@ -688,10 +689,12 @@ main {
 .bk-team-code       { flex: 1; }
 .bk-score           { font-weight: 700; font-size: 13px; min-width: 14px; text-align: right; }
 .bk-team.bk-winner  { color: var(--ink); }
-.bk-team.bk-winner .bk-score { color: var(--ice); }
+.bk-team.bk-winner .bk-score { color: var(--gold); }
 .bk-team.bk-loser   { opacity: .45; }
 .bk-team.bk-leading { color: var(--ink); }
 .bk-team.bk-leading .bk-score { color: var(--gold); }
+.bk-team.bk-pending { color: var(--ink-30); font-style: italic; opacity: .7; }
+.bk-team.bk-pending .bk-team-code { font-size: 10px; }
 
 /* TBD slot */
 .bk-tbd-box {
@@ -876,7 +879,7 @@ footer {
     </div>
     <div class="header-meta">
       <div class="phase-badge" id="phase-badge">Phase 1 — Tour 1 terminé</div>
-      <div class="last-update" id="last-update">Mis à jour le mai 10, 2026 à 06:48 EDT</div>
+      <div class="last-update" id="last-update">—</div>
     </div>
   </div>
 </header>
@@ -906,6 +909,7 @@ footer {
           <th class="num">Phase 2</th>
           <th class="num">Phase 3</th>
           <th class="num">Bonus</th>
+          <th class="num">Pénalité</th>
           <th class="num">Total</th>
           <th>Progression</th>
         </tr>
@@ -918,6 +922,7 @@ footer {
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab('phase1')">Phase 1 — Résultats</button>
     <button class="tab-btn" onclick="switchTab('phase2')">Phase 2 — Prédictions</button>
+    <button class="tab-btn" onclick="switchTab('phase3')">Phase 3 — Coupe Stanley</button>
   </div>
 
   <!-- PANNEAU PHASE 1 -->
@@ -935,10 +940,16 @@ footer {
     <div id="tab-phase2-content"></div>
   </div>
 
+  <!-- PANNEAU PHASE 3 -->
+  <div class="tab-panel" id="tab-phase3">
+    <div class="section-title">Phase 3 — Coupe Stanley</div>
+    <div id="tab-phase3-content"></div>
+  </div>
+
 </main>
 
 <footer>
-  Pool NHL 2026 · CTA Cabinet Comptable · Mis à jour le <span id="footer-date">Mis à jour le mai 10, 2026 à 06:48 EDT</span>
+  Pool NHL 2026 · Boutin · Mis à jour le <span id="footer-date">—</span>
 </footer>
 
 <script>
@@ -946,8 +957,8 @@ footer {
 //  DATA — mis à jour à chaque import
 // ════════════════════════════════════════════════════════════════
 const POOL = {
-  updated: "2026-05-06",
-  phase: "Phase 1 terminée — Phase 2 en cours",
+  updated: "2026-05-10",
+  phase: "Phase 2 — Tour 2 en cours",
 
   series: [
     { key:"est_buf_bos",   label:"BUF vs BOS",   full:"Buffalo Sabres vs Boston Bruins",          conf:"EST",   winner:"BUF", matchs:6 },
@@ -963,15 +974,15 @@ const POOL = {
   bracket: {
     west: {
       arms: [
-        { label:'DF Ouest 1', r1:[{t1:'COL',s1:4,t2:'LAK',s2:0,w:'COL'},{t1:'DAL',s1:2,t2:'MIN',s2:4,w:'MIN'}], r2:{t1:'COL',s1:2,t2:'MIN',s2:1,w:null} },
-        { label:'DF Ouest 2', r1:[{t1:'VGK',s1:4,t2:'UTA',s2:2,w:'VGK'},{t1:'EDM',s1:2,t2:'ANA',s2:4,w:'ANA'}], r2:{t1:'VGK',s1:2,t2:'ANA',s2:1,w:null} },
+        { label:'DF Ouest 1', r1:[{t1:'COL',s1:4,t2:'LAK',s2:0,w:'COL'},{t1:'DAL',s1:2,t2:'MIN',s2:4,w:'MIN'}], r2:{t1:'COL',s1:0,t2:'MIN',s2:0,w:null} },
+        { label:'DF Ouest 2', r1:[{t1:'VGK',s1:4,t2:'UTA',s2:2,w:'VGK'},{t1:'EDM',s1:2,t2:'ANA',s2:4,w:'ANA'}], r2:{t1:'VGK',s1:0,t2:'ANA',s2:0,w:null} },
       ],
       cf: { t1:null, t2:null, w:null },
     },
     east: {
       arms: [
-        { label:'DF Est 1', r1:[{t1:'BUF',s1:4,t2:'BOS',s2:2,w:'BUF'},{t1:'TBL',s1:3,t2:'MTL',s2:4,w:'MTL'}], r2:{t1:'BUF',s1:1,t2:'MTL',s2:1,w:null} },
-        { label:'DF Est 2', r1:[{t1:'CAR',s1:4,t2:'OTT',s2:0,w:'CAR'},{t1:'PIT',s1:2,t2:'PHI',s2:4,w:'PHI'}], r2:{t1:'CAR',s1:4,t2:'PHI',s2:0,w:'CAR'} },
+        { label:'DF Est 1', r1:[{t1:'BUF',s1:4,t2:'BOS',s2:2,w:'BUF'},{t1:'TBL',s1:3,t2:'MTL',s2:4,w:'MTL'}], r2:{t1:'BUF',s1:0,t2:'MTL',s2:0,w:null} },
+        { label:'DF Est 2', r1:[{t1:'CAR',s1:4,t2:'OTT',s2:0,w:'CAR'},{t1:'PIT',s1:2,t2:'PHI',s2:4,w:'PHI'}], r2:{t1:'CAR',s1:0,t2:'PHI',s2:0,w:null} },
       ],
       cf: { t1:null, t2:null, w:null },
     },
@@ -979,284 +990,296 @@ const POOL = {
   },
 
   series2: [
-    { key:'df_car_phi', label:'CAR vs PHI', full:'Carolina Hurricanes vs Philadelphia Flyers', conf:'EST',   score:'4-0', winner:'CAR', matchs:4 },
-    { key:'df_buf_mtl', label:'BUF vs MTL', full:'Buffalo Sabres vs Montréal Canadiens',       conf:'EST',   score:'1-1', winner:null, matchs:2 },
-    { key:'df_min_col', label:'MIN vs COL', full:'Minnesota Wild vs Colorado Avalanche',       conf:'OUEST', score:'2-1', winner:null, matchs:3 },
-    { key:'df_vgk_ana', label:'VGK vs ANA', full:'Vegas Golden Knights vs Anaheim Ducks',      conf:'OUEST', score:'2-1', winner:null, matchs:3 },
+    { key:'df_car_phi', label:'CAR vs PHI', full:'Carolina Hurricanes vs Philadelphia Flyers', conf:'EST',   score:'0–0', winner:null, matchs:null },
+    { key:'df_min_col', label:'MIN vs COL', full:'Minnesota Wild vs Colorado Avalanche',       conf:'OUEST', score:'0–0', winner:null, matchs:null },
+    { key:'df_buf_mtl', label:'BUF vs MTL', full:'Buffalo Sabres vs Montréal Canadiens',       conf:'EST',   score:'0–0', winner:null, matchs:null },
+    { key:'df_vgk_ana', label:'VGK vs ANA', full:'Vegas Golden Knights vs Anaheim Ducks',      conf:'OUEST', score:'0–0', winner:null, matchs:null },
   ],
   fcSeries: [
-    { key:'fc_est',   label:'FC Est',   full:'Finale de Conference Est',   conf:'EST',   winner:null },
-    { key:'fc_ouest', label:'FC Ouest', full:'Finale de Conference Ouest', conf:'OUEST', winner:null },
+    { key:'fc_est',   label:'FC Est',   full:'Finale de Conférence Est',   conf:'EST',   winner:null, matchs:null },
+    { key:'fc_ouest', label:'FC Ouest', full:'Finale de Conférence Ouest', conf:'OUEST', winner:null, matchs:null },
+  ],
+  finalSeries: [
+    { key:'sc_final', label:'Grande finale', full:'Stanley Cup Final', winner:null, matchs:null },
   ],
 
   bonusQuestions: [
-    { id:"q_mcdavid",          label:"Buts de McDavid - 1er tour (le + proche gagne)",        vraiReponse: 1 },
-    { id:"q_prolongations",    label:"Matchs en prolongation - 1er tour (le + proche gagne)", vraiReponse: 13 },
-    { id:"q_minutes_punition", label:"Minutes de punition - 1er tour (le + proche gagne)",    vraiReponse: 1174 },
-    { id:"q_blanchissages",    label:"Blanchissages - 1er tour (le + proche gagne)",          vraiReponse: 5 },
-    { id:"q_bagarres",         label:"Bagarres - 1er tour (le + proche gagne)",               vraiReponse: 4 },
+    { id:"q_mcdavid",          label:"Buts de McDavid — 1er tour (le + proche gagne)",        vraiReponse: 1 },
+    { id:"q_prolongations",    label:"Matchs en prolongation — 1er tour (le + proche gagne)", vraiReponse: 13 },
+    { id:"q_minutes_punition", label:"Minutes de punition — 1er tour (le + proche gagne)",    vraiReponse: 1174 },
+    { id:"q_blanchissages",    label:"Blanchissages — 1er tour (le + proche gagne)",          vraiReponse: 5 },
+    { id:"q_bagarres",         label:"Bagarres — 1er tour (le + proche gagne)",               vraiReponse: 4 },
   ],
 
   participants: [
     {
-      nom: "Pascale Laverdure", nickname: "Ti-cass",
+      nom: "Pascale Laverdure",
+      nickname: "Ti-cass",
       pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
-      phase2: {
-              df_car_phi:  { equipe: "PHI", matchs: 6 },
-              df_buf_mtl:  { equipe: "MTL", matchs: 7 },
-              df_vgk_ana:  { equipe: "VGK", matchs: 6 },
-              df_min_col:  { equipe: "COL", matchs: 6 },
-              fc_est:  { equipe: "MTL", matchs: 7 },
-              fc_ouest:  { equipe: "VGK", matchs: 7 },
-            },
+      phase2: {df_car_phi:{equipe:"PHI",matchs:6}, df_buf_mtl:{equipe:"MTL",matchs:7}, df_vgk_ana:{equipe:"VGK",matchs:6}, df_min_col:{equipe:"COL",matchs:6}, fc_est:{equipe:"MTL",matchs:7}, fc_ouest:{equipe:"VGK",matchs:7}},
+      phase3: {sc_final:{equipe:null,matchs:null}},
       phase1: {
-        est_buf_bos:   { equipe: "BUF", matchs: 6 },
-        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
-        est_car_ott:   { equipe: "OTT", matchs: 7 },
-        est_pit_phi:   { equipe: "PIT", matchs: 6 },
+        est_buf_bos: { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl: { equipe: "MTL", matchs: 7 },
+        est_car_ott: { equipe: "OTT", matchs: 7 },
+        est_pit_phi: { equipe: "PIT", matchs: 6 },
         ouest_col_lak: { equipe: "COL", matchs: 5 },
         ouest_dal_min: { equipe: "DAL", matchs: 6 },
         ouest_vgk_uta: { equipe: "VGK", matchs: 6 },
         ouest_edm_ana: { equipe: "EDM", matchs: 5 },
       },
-      bonus: { q_mcdavid:10, q_prolongations:3, q_minutes_punition:260, q_blanchissages:1, q_bagarres:12 },
+      bonus: {
+        q_mcdavid: 10, q_prolongations: 3, q_minutes_punition: 260, q_blanchissages: 1, q_bagarres: 12,
+      },
     },
     {
-      nom: "Carl Boutin", nickname: "Bout'criss",
+      nom: "Carl Boutin",
+      nickname: "Bout'criss",
       pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
-      phase2: {
-              df_car_phi:  { equipe: "CAR", matchs: 4 },
-              df_buf_mtl:  { equipe: "MTL", matchs: 7 },
-              df_vgk_ana:  { equipe: "VGK", matchs: 6 },
-              df_min_col:  { equipe: "COL", matchs: 6 },
-              fc_est:  { equipe: "MTL", matchs: 7 },
-              fc_ouest:  { equipe: "COL", matchs: 6 },
-            },
+      phase2: {df_car_phi:{equipe:"CAR",matchs:4}, df_buf_mtl:{equipe:"MTL",matchs:7}, df_vgk_ana:{equipe:"VGK",matchs:6}, df_min_col:{equipe:"COL",matchs:6}, fc_est:{equipe:"MTL",matchs:7}, fc_ouest:{equipe:"COL",matchs:6}},
+      phase3: {sc_final:{equipe:null,matchs:null}},
       phase1: {
-        est_buf_bos:   { equipe: "BUF", matchs: 5 },
-        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
-        est_car_ott:   { equipe: "CAR", matchs: 4 },
-        est_pit_phi:   { equipe: "PHI", matchs: 7 },
+        est_buf_bos: { equipe: "BUF", matchs: 5 },
+        est_tbl_mtl: { equipe: "MTL", matchs: 7 },
+        est_car_ott: { equipe: "CAR", matchs: 4 },
+        est_pit_phi: { equipe: "PHI", matchs: 7 },
         ouest_col_lak: { equipe: "COL", matchs: 5 },
         ouest_dal_min: { equipe: "DAL", matchs: 5 },
         ouest_vgk_uta: { equipe: "VGK", matchs: 6 },
         ouest_edm_ana: { equipe: "EDM", matchs: 4 },
       },
-      bonus: { q_mcdavid:4, q_prolongations:10, q_minutes_punition:905, q_blanchissages:5, q_bagarres:7 },
+      bonus: {
+        q_mcdavid: 4, q_prolongations: 10, q_minutes_punition: 905, q_blanchissages: 5, q_bagarres: 7,
+      },
     },
     {
-      nom: "Alexandra Rondeau", nickname: "The Rookie",
+      nom: "Alexandra Rondeau",
+      nickname: "The Rookie",
       pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
-      phase2: {
-              df_car_phi:  { equipe: "CAR", matchs: 6 },
-              df_buf_mtl:  { equipe: "MTL", matchs: 7 },
-              df_vgk_ana:  { equipe: "VGK", matchs: 6 },
-              df_min_col:  { equipe: "COL", matchs: 6 },
-              fc_est:  { equipe: "MTL", matchs: 7 },
-              fc_ouest:  { equipe: "COL", matchs: 6 },
-            },
+      phase2: {df_car_phi:{equipe:"CAR",matchs:6}, df_buf_mtl:{equipe:"MTL",matchs:7}, df_vgk_ana:{equipe:"VGK",matchs:6}, df_min_col:{equipe:"COL",matchs:6}, fc_est:{equipe:"MTL",matchs:7}, fc_ouest:{equipe:"COL",matchs:6}},
+      phase3: {sc_final:{equipe:null,matchs:null}},
       phase1: {
-        est_buf_bos:   { equipe: "BUF", matchs: 6 },
-        est_tbl_mtl:   { equipe: "MTL", matchs: 6 },
-        est_car_ott:   { equipe: "CAR", matchs: 6 },
-        est_pit_phi:   { equipe: "PIT", matchs: 7 },
+        est_buf_bos: { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl: { equipe: "MTL", matchs: 6 },
+        est_car_ott: { equipe: "CAR", matchs: 6 },
+        est_pit_phi: { equipe: "PIT", matchs: 7 },
         ouest_col_lak: { equipe: "COL", matchs: 5 },
         ouest_dal_min: { equipe: "DAL", matchs: 5 },
         ouest_vgk_uta: { equipe: "VGK", matchs: 6 },
         ouest_edm_ana: { equipe: "EDM", matchs: 7 },
       },
-      bonus: { q_mcdavid:7, q_prolongations:8, q_minutes_punition:28, q_blanchissages:4, q_bagarres:12 },
+      bonus: {
+        q_mcdavid: 7, q_prolongations: 8, q_minutes_punition: 28, q_blanchissages: 4, q_bagarres: 12,
+      },
     },
     {
-      nom: "Valerie Boutin", nickname: "Valo Dalot",
+      nom: "Valerie Boutin",
+      nickname: "Valo Dalot",
       pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
-      phase2: {
-              df_car_phi:  { equipe: "PHI", matchs: 6 },
-              df_buf_mtl:  { equipe: "MTL", matchs: 6 },
-              df_vgk_ana:  { equipe: "VGK", matchs: 7 },
-              df_min_col:  { equipe: "COL", matchs: 7 },
-              fc_est:  { equipe: "MTL", matchs: 7 },
-              fc_ouest:  { equipe: "COL", matchs: 6 },
-            },
+      phase2: {df_car_phi:{equipe:"PHI",matchs:6}, df_buf_mtl:{equipe:"MTL",matchs:6}, df_vgk_ana:{equipe:"VGK",matchs:7}, df_min_col:{equipe:"COL",matchs:7}, fc_est:{equipe:"MTL",matchs:7}, fc_ouest:{equipe:"COL",matchs:6}},
+      phase3: {sc_final:{equipe:null,matchs:null}},
       phase1: {
-        est_buf_bos:   { equipe: "BUF", matchs: 6 },
-        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
-        est_car_ott:   { equipe: "CAR", matchs: 5 },
-        est_pit_phi:   { equipe: "PIT", matchs: 6 },
+        est_buf_bos: { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl: { equipe: "MTL", matchs: 7 },
+        est_car_ott: { equipe: "CAR", matchs: 5 },
+        est_pit_phi: { equipe: "PIT", matchs: 6 },
         ouest_col_lak: { equipe: "COL", matchs: 5 },
         ouest_dal_min: { equipe: "MIN", matchs: 7 },
         ouest_vgk_uta: { equipe: "VGK", matchs: 6 },
         ouest_edm_ana: { equipe: "EDM", matchs: 7 },
       },
-      bonus: { q_mcdavid:3, q_prolongations:6, q_minutes_punition:60, q_blanchissages:9, q_bagarres:15 },
+      bonus: {
+        q_mcdavid: 3, q_prolongations: 6, q_minutes_punition: 60, q_blanchissages: 9, q_bagarres: 15,
+      },
     },
     {
-      nom: "Penelope Landry", nickname: "Penny",
+      nom: "Penelope Landry",
+      nickname: "Penny",
       pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
-      phase2: {
-              df_car_phi:  { equipe: "CAR", matchs: 6 },
-              df_buf_mtl:  { equipe: "MTL", matchs: 6 },
-              df_vgk_ana:  { equipe: "ANA", matchs: 6 },
-              df_min_col:  { equipe: "MIN", matchs: 6 },
-              fc_est:  { equipe: "MTL", matchs: 7 },
-              fc_ouest:  { equipe: "MIN", matchs: 6 },
-            },
+      phase2: {df_car_phi:{equipe:"CAR",matchs:6}, df_buf_mtl:{equipe:"MTL",matchs:6}, df_vgk_ana:{equipe:"ANA",matchs:6}, df_min_col:{equipe:"MIN",matchs:6}, fc_est:{equipe:"MTL",matchs:7}, fc_ouest:{equipe:"MIN",matchs:6}},
+      phase3: {sc_final:{equipe:null,matchs:null}},
       phase1: {
-        est_buf_bos:   { equipe: "BUF", matchs: 5 },
-        est_tbl_mtl:   { equipe: "MTL", matchs: 6 },
-        est_car_ott:   { equipe: "CAR", matchs: 5 },
-        est_pit_phi:   { equipe: "PIT", matchs: 6 },
+        est_buf_bos: { equipe: "BUF", matchs: 5 },
+        est_tbl_mtl: { equipe: "MTL", matchs: 6 },
+        est_car_ott: { equipe: "CAR", matchs: 5 },
+        est_pit_phi: { equipe: "PIT", matchs: 6 },
         ouest_col_lak: { equipe: "COL", matchs: 4 },
         ouest_dal_min: { equipe: "MIN", matchs: 6 },
         ouest_vgk_uta: { equipe: "UTA", matchs: 7 },
         ouest_edm_ana: { equipe: "EDM", matchs: 6 },
       },
-      bonus: { q_mcdavid:3, q_prolongations:4, q_minutes_punition:660, q_blanchissages:8, q_bagarres:7 },
+      bonus: {
+        q_mcdavid: 3, q_prolongations: 4, q_minutes_punition: 660, q_blanchissages: 8, q_bagarres: 7,
+      },
     },
     {
-      nom: "Maxime Charland", nickname: "Maxime Charland",
+      nom: "Maxime Charland",
+      nickname: "Maxime Charland",
       pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
-      phase2: {
-              df_car_phi:  { equipe: "CAR", matchs: 6 },
-              df_buf_mtl:  { equipe: "MTL", matchs: 7 },
-              df_min_col:  { equipe: "MIN", matchs: 6 },
-              df_vgk_ana:  { equipe: "VGK", matchs: 6 },
-              fc_est:  { equipe: "CAR", matchs: 5 },
-              fc_ouest:  { equipe: "MIN", matchs: 6 },
-            },
+      phase2: {df_car_phi:{equipe:"CAR",matchs:6}, df_buf_mtl:{equipe:"MTL",matchs:7}, df_min_col:{equipe:"MIN",matchs:6}, df_vgk_ana:{equipe:"VGK",matchs:6}, fc_est:{equipe:"CAR",matchs:5}, fc_ouest:{equipe:"MIN",matchs:6}},
+      phase3: {sc_final:{equipe:null,matchs:null}},
       phase1: {
-        est_buf_bos:   { equipe: "BUF", matchs: 5 },
-        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
-        est_car_ott:   { equipe: "CAR", matchs: 6 },
-        est_pit_phi:   { equipe: "PHI", matchs: 7 },
+        est_buf_bos: { equipe: "BUF", matchs: 5 },
+        est_tbl_mtl: { equipe: "MTL", matchs: 7 },
+        est_car_ott: { equipe: "CAR", matchs: 6 },
+        est_pit_phi: { equipe: "PHI", matchs: 7 },
         ouest_col_lak: { equipe: "COL", matchs: 4 },
         ouest_dal_min: { equipe: "MIN", matchs: 7 },
         ouest_vgk_uta: { equipe: "UTA", matchs: 6 },
         ouest_edm_ana: { equipe: "ANA", matchs: 5 },
       },
-      bonus: { q_mcdavid:5, q_prolongations:12, q_minutes_punition:500, q_blanchissages:6, q_bagarres:28 },
+      bonus: {
+        q_mcdavid: 5, q_prolongations: 12, q_minutes_punition: 500, q_blanchissages: 6, q_bagarres: 28,
+      },
     },
     {
-      nom: "Sonia Vallerand", nickname: "Vallerand",
+      nom: "Sonia Vallerand",
+      nickname: "Vallerand",
       pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
-      phase2: {
-              df_car_phi:  { equipe: "CAR", matchs: 6 },
-              df_buf_mtl:  { equipe: "BUF", matchs: 5 },
-              df_vgk_ana:  { equipe: "ANA", matchs: 6 },
-              df_min_col:  { equipe: "COL", matchs: 6 },
-              fc_est:  { equipe: "BUF", matchs: 7 },
-              fc_ouest:  { equipe: "ANA", matchs: 5 },
-            },
+      phase2: {df_car_phi:{equipe:"CAR",matchs:6}, df_buf_mtl:{equipe:"BUF",matchs:5}, df_vgk_ana:{equipe:"ANA",matchs:6}, df_min_col:{equipe:"COL",matchs:6}, fc_est:{equipe:"BUF",matchs:7}, fc_ouest:{equipe:"ANA",matchs:5}},
+      phase3: {sc_final:{equipe:null,matchs:null}},
       phase1: {
-        est_buf_bos:   { equipe: "BOS", matchs: 5 },
-        est_tbl_mtl:   { equipe: "MTL", matchs: 5 },
-        est_car_ott:   { equipe: "CAR", matchs: 5 },
-        est_pit_phi:   { equipe: "PHI", matchs: 6 },
+        est_buf_bos: { equipe: "BOS", matchs: 5 },
+        est_tbl_mtl: { equipe: "MTL", matchs: 5 },
+        est_car_ott: { equipe: "CAR", matchs: 5 },
+        est_pit_phi: { equipe: "PHI", matchs: 6 },
         ouest_col_lak: { equipe: "LAK", matchs: 6 },
         ouest_dal_min: { equipe: "DAL", matchs: 5 },
         ouest_vgk_uta: { equipe: "VGK", matchs: 5 },
         ouest_edm_ana: { equipe: "EDM", matchs: 6 },
       },
-      bonus: { q_mcdavid:1, q_prolongations:1, q_minutes_punition:2, q_blanchissages:0, q_bagarres:2 },
+      bonus: {
+        q_mcdavid: 1, q_prolongations: 1, q_minutes_punition: 2, q_blanchissages: 0, q_bagarres: 2,
+      },
     },
     {
-      nom: "Pascal Bernier", nickname: "Biquette",
+      nom: "Pascal Bernier",
+      nickname: "Biquette",
       pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
-      phase2: {
-              df_car_phi:  { equipe: "CAR", matchs: 5 },
-              df_buf_mtl:  { equipe: "MTL", matchs: 7 },
-              df_vgk_ana:  { equipe: "ANA", matchs: 6 },
-              df_min_col:  { equipe: "MIN", matchs: 6 },
-              fc_est:  { equipe: "MTL", matchs: 6 },
-              fc_ouest:  { equipe: "MIN", matchs: 6 },
-            },
+      phase2: {df_car_phi:{equipe:"CAR",matchs:5}, df_buf_mtl:{equipe:"MTL",matchs:7}, df_vgk_ana:{equipe:"ANA",matchs:6}, df_min_col:{equipe:"MIN",matchs:6}, fc_est:{equipe:"MTL",matchs:6}, fc_ouest:{equipe:"MIN",matchs:6}},
+      phase3: {sc_final:{equipe:null,matchs:null}},
       phase1: {
-        est_buf_bos:   { equipe: "BUF", matchs: 6 },
-        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
-        est_car_ott:   { equipe: "CAR", matchs: 6 },
-        est_pit_phi:   { equipe: "PIT", matchs: 5 },
+        est_buf_bos: { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl: { equipe: "MTL", matchs: 7 },
+        est_car_ott: { equipe: "CAR", matchs: 6 },
+        est_pit_phi: { equipe: "PIT", matchs: 5 },
         ouest_col_lak: { equipe: "COL", matchs: 5 },
         ouest_dal_min: { equipe: "DAL", matchs: 6 },
         ouest_vgk_uta: { equipe: "VGK", matchs: 5 },
         ouest_edm_ana: { equipe: "ANA", matchs: 6 },
       },
-      bonus: { q_mcdavid:2, q_prolongations:3, q_minutes_punition:17, q_blanchissages:6, q_bagarres:5 },
+      bonus: {
+        q_mcdavid: 2, q_prolongations: 3, q_minutes_punition: 17, q_blanchissages: 6, q_bagarres: 5,
+      },
     },
     {
-      nom: "Chloe Jodoin", nickname: "Jodoin",
+      nom: "Chloe Jodoin",
+      nickname: "Jodoin",
       pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
-      phase2: {
-              df_car_phi:  { equipe: "CAR", matchs: 5 },
-              df_buf_mtl:  { equipe: "MTL", matchs: 7 },
-              df_vgk_ana:  { equipe: "VGK", matchs: 6 },
-              df_min_col:  { equipe: "COL", matchs: 5 },
-              fc_est:  { equipe: "MTL", matchs: 7 },
-              fc_ouest:  { equipe: "COL", matchs: 5 },
-            },
+      phase2: {df_car_phi:{equipe:"CAR",matchs:5}, df_buf_mtl:{equipe:"MTL",matchs:7}, df_vgk_ana:{equipe:"VGK",matchs:6}, df_min_col:{equipe:"COL",matchs:5}, fc_est:{equipe:"MTL",matchs:7}, fc_ouest:{equipe:"COL",matchs:5}},
+      phase3: {sc_final:{equipe:null,matchs:null}},
       phase1: {
-        est_buf_bos:   { equipe: "BUF", matchs: 6 },
-        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
-        est_car_ott:   { equipe: "CAR", matchs: 6 },
-        est_pit_phi:   { equipe: "PHI", matchs: 5 },
+        est_buf_bos: { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl: { equipe: "MTL", matchs: 7 },
+        est_car_ott: { equipe: "CAR", matchs: 6 },
+        est_pit_phi: { equipe: "PHI", matchs: 5 },
         ouest_col_lak: { equipe: "COL", matchs: 4 },
         ouest_dal_min: { equipe: "DAL", matchs: 5 },
         ouest_vgk_uta: { equipe: "VGK", matchs: 5 },
         ouest_edm_ana: { equipe: "EDM", matchs: 6 },
       },
-      bonus: { q_mcdavid:4, q_prolongations:6, q_minutes_punition:100, q_blanchissages:1, q_bagarres:11 },
+      bonus: {
+        q_mcdavid: 4, q_prolongations: 6, q_minutes_punition: 100, q_blanchissages: 1, q_bagarres: 11,
+      },
     },
     {
-      nom: "Vincent Boutin", nickname: "BOOTS - PUCK YEAH",
+      nom: "Vincent Boutin",
+      nickname: "BOOTS - PUCK YEAH",
       pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
-      phase2: {
-              df_car_phi:  { equipe: "CAR", matchs: 6 },
-              df_buf_mtl:  { equipe: "MTL", matchs: 7 },
-              df_vgk_ana:  { equipe: "ANA", matchs: 6 },
-              df_min_col:  { equipe: "COL", matchs: 6 },
-              fc_est:  { equipe: "MTL", matchs: 7 },
-              fc_ouest:  { equipe: "COL", matchs: 7 },
-            },
+      phase2: {df_car_phi:{equipe:"CAR",matchs:6}, df_buf_mtl:{equipe:"MTL",matchs:7}, df_vgk_ana:{equipe:"ANA",matchs:6}, df_min_col:{equipe:"COL",matchs:6}, fc_est:{equipe:"MTL",matchs:7}, fc_ouest:{equipe:"COL",matchs:7}},
+      phase3: {sc_final:{equipe:null,matchs:null}},
       phase1: {
-        est_buf_bos:   { equipe: "BUF", matchs: 6 },
-        est_tbl_mtl:   { equipe: "MTL", matchs: 7 },
-        est_car_ott:   { equipe: "CAR", matchs: 6 },
-        est_pit_phi:   { equipe: "PIT", matchs: 7 },
+        est_buf_bos: { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl: { equipe: "MTL", matchs: 7 },
+        est_car_ott: { equipe: "CAR", matchs: 6 },
+        est_pit_phi: { equipe: "PIT", matchs: 7 },
         ouest_col_lak: { equipe: "COL", matchs: 5 },
         ouest_dal_min: { equipe: "DAL", matchs: 7 },
         ouest_vgk_uta: { equipe: "VGK", matchs: 6 },
         ouest_edm_ana: { equipe: "EDM", matchs: 6 },
       },
-      bonus: { q_mcdavid:7, q_prolongations:11, q_minutes_punition:800, q_blanchissages:7, q_bagarres:2 },
+      bonus: {
+        q_mcdavid: 7, q_prolongations: 11, q_minutes_punition: 800, q_blanchissages: 7, q_bagarres: 2,
+      },
     },
     {
-      nom: "Patrick Phaneuf", nickname: "Roadrunner",
+      nom: "Patrick Phaneuf",
+      nickname: "Roadrunner",
       pts: { phase1: 0, phase2: 0, phase3: 0, bonus: 0 },
-      phase2: {
-              df_car_phi:  { equipe: "CAR", matchs: 6 },
-              df_buf_mtl:  { equipe: "MTL", matchs: 6 },
-              df_vgk_ana:  { equipe: "VGK", matchs: 6 },
-              df_min_col:  { equipe: "COL", matchs: 5 },
-              fc_est:  { equipe: "MTL", matchs: 6 },
-              fc_ouest:  { equipe: "COL", matchs: 6 },
-            },
+      phase2: {df_car_phi:{equipe:"CAR",matchs:6}, df_buf_mtl:{equipe:"MTL",matchs:6}, df_vgk_ana:{equipe:"VGK",matchs:6}, df_min_col:{equipe:"COL",matchs:5}, fc_est:{equipe:"MTL",matchs:6}, fc_ouest:{equipe:"COL",matchs:6}},
+      phase3: {sc_final:{equipe:null,matchs:null}},
       phase1: {
-        est_buf_bos:   { equipe: "BUF", matchs: 6 },
-        est_tbl_mtl:   { equipe: "MTL", matchs: 6 },
-        est_car_ott:   { equipe: "CAR", matchs: 5 },
-        est_pit_phi:   { equipe: "PIT", matchs: 7 },
+        est_buf_bos: { equipe: "BUF", matchs: 6 },
+        est_tbl_mtl: { equipe: "MTL", matchs: 6 },
+        est_car_ott: { equipe: "CAR", matchs: 5 },
+        est_pit_phi: { equipe: "PIT", matchs: 7 },
         ouest_col_lak: { equipe: "COL", matchs: 6 },
         ouest_dal_min: { equipe: "DAL", matchs: 7 },
         ouest_vgk_uta: { equipe: "VGK", matchs: 7 },
         ouest_edm_ana: { equipe: "EDM", matchs: 6 },
       },
-      bonus: { q_mcdavid:6, q_prolongations:6, q_minutes_punition:235, q_blanchissages:4, q_bagarres:3 },
+      bonus: {
+        q_mcdavid: 6, q_prolongations: 6, q_minutes_punition: 235, q_blanchissages: 4, q_bagarres: 3,
+      },
     },
   ],
 };
+
+// ════════════════════════════════════════════════════════════════
+//  PHASE BADGE (Fix #9 : auto-calculé selon état bracket)
+// ════════════════════════════════════════════════════════════════
+function computePhase() {
+  const b = POOL.bracket;
+  let r1Done = 0, r1Started = 0;
+  ['west','east'].forEach(conf => {
+    b[conf].arms.forEach(arm => {
+      arm.r1.forEach(m => {
+        if (m.w) r1Done++;
+        if ((+m.s1||0) > 0 || (+m.s2||0) > 0) r1Started++;
+      });
+    });
+  });
+  let r2Done = 0, r2Started = 0;
+  ['west','east'].forEach(conf => {
+    b[conf].arms.forEach(arm => {
+      if (arm.r2.w) r2Done++;
+      if ((+arm.r2.s1||0) > 0 || (+arm.r2.s2||0) > 0) r2Started++;
+    });
+  });
+  let cfDone = 0, cfStarted = 0;
+  ['west','east'].forEach(conf => {
+    if (b[conf].cf.w) cfDone++;
+    if (b[conf].cf.t1 && b[conf].cf.t2) cfStarted++;
+  });
+  const finalDone = !!b.final.w;
+  const finalStarted = !!(b.final.t1 && b.final.t2);
+
+  if (finalDone)              return "🏆 Coupe Stanley remise";
+  if (finalStarted)           return "Phase 3 — Grande Finale en cours";
+  if (cfDone === 2)           return "Phase 2 — Finales de Conférence terminées";
+  if (cfStarted > 0)          return "Phase 2 — Finales de Conférence en cours";
+  if (r2Done === 4)           return "Phase 2 — Tour 2 terminé";
+  if (r2Started > 0 || r2Done > 0) return "Phase 2 — Tour 2 en cours";
+  if (r1Done === 8)           return "Phase 1 — Tour 1 terminé";
+  if (r1Started > 0 || r1Done > 0) return "Phase 1 — Tour 1 en cours";
+  return "Avant les séries";
+}
+
 // ════════════════════════════════════════════════════════════════
 //  SCORING
 // ════════════════════════════════════════════════════════════════
 function calcScore(p) {
+  // ── Phase 1 : bonne équipe = 3 pts, bon nombre de matchs = +2 pts
   let p1 = 0;
   POOL.series.forEach(s => {
     const pred = p.phase1[s.key];
@@ -1268,12 +1291,14 @@ function calcScore(p) {
   });
   p.pts.phase1 = p1;
 
+  // ── Phase 2 : DF = 4 pts + 2 bonus matchs ; FC = 5 pts + 2 bonus matchs
   let p2 = 0;
   if (p.phase2) {
     POOL.series2.forEach(s => {
       const pred = p.phase2[s.key];
       if (!pred || !s.winner) return;
-      if (pred.equipe === s.winner) {
+      const team = pred.equipe || pred;
+      if (team === s.winner) {
         p2 += 4;
         if (s.matchs && pred.matchs === s.matchs) p2 += 2;
       }
@@ -1281,7 +1306,8 @@ function calcScore(p) {
     POOL.fcSeries.forEach(s => {
       const pred = p.phase2[s.key];
       if (!pred || !s.winner) return;
-      if (pred.equipe === s.winner) {
+      const team = pred.equipe || pred;
+      if (team === s.winner) {
         p2 += 5;
         if (s.matchs && pred.matchs === s.matchs) p2 += 2;
       }
@@ -1289,8 +1315,23 @@ function calcScore(p) {
   }
   p.pts.phase2 = p2;
 
+  // ── Phase 3 : Champion Coupe Stanley = 10 pts + 3 bonus matchs
+  let p3 = 0;
+  if (p.phase3 && POOL.finalSeries) {
+    POOL.finalSeries.forEach(s => {
+      const pred = p.phase3[s.key];
+      if (!pred || !s.winner) return;
+      const team = pred.equipe || pred;
+      if (team === s.winner) {
+        p3 += 10;
+        if (s.matchs && pred.matchs === s.matchs) p3 += 3;
+      }
+    });
+  }
+  p.pts.phase3 = p3;
+
   p.pts.bonus = calcBonus(p);
-  return p.pts.phase1 + p.pts.phase2 + p.pts.phase3 + p.pts.bonus;
+  return p.pts.phase1 + p.pts.phase2 + p.pts.phase3 + p.pts.bonus - (p.penalty || 0);
 }
 
 function getBonusWinners(q) {
@@ -1326,8 +1367,10 @@ function getBonusResult(p, q) {
 
 function getPredResult(pred, serie) {
   if (!serie.winner) return 'pending';
-  if (pred.equipe === serie.winner && pred.matchs === serie.matchs) return 'correct';
-  if (pred.equipe === serie.winner) return 'partial';
+  const team = (pred && pred.equipe) || pred;
+  const matchs = pred && pred.matchs;
+  if (team === serie.winner && matchs === serie.matchs) return 'correct';
+  if (team === serie.winner) return 'partial';
   return 'wrong';
 }
 
@@ -1347,27 +1390,56 @@ function teamLogo(code, size = 'sm') {
 }
 
 // ════════════════════════════════════════════════════════════════
-//  BRACKET
+//  BRACKET — Propagation automatique R1→R2→CF→Finale
 // ════════════════════════════════════════════════════════════════
+function propagateBracket() {
+  const b = POOL.bracket;
+  ['west','east'].forEach(conf => {
+    b[conf].arms.forEach(arm => {
+      if (arm.r1[0].w) arm.r2.t1 = arm.r1[0].w;
+      if (arm.r1[1].w) arm.r2.t2 = arm.r1[1].w;
+    });
+    const c = b[conf];
+    // Propagation partielle : dès qu'une R2 est gagnée, on remplit le côté correspondant du CF
+    if (c.arms[0].r2.w) c.cf.t1 = c.arms[0].r2.w;
+    if (c.arms[1].r2.w) c.cf.t2 = c.arms[1].r2.w;
+  });
+  if (b.east.cf.w) b.final.t1 = b.east.cf.w;
+  if (b.west.cf.w) b.final.t2 = b.west.cf.w;
+}
+
 function renderBracket() {
   const b  = POOL.bracket;
   const el = document.getElementById('bracket-grid');
 
   // ── helpers ────────────────────────────────────────────────
   function logo(code) {
+    if (!code) return `<div class="bk-tbd-icon" style="width:22px;height:22px;font-size:11px;">?</div>`;
     return `<img src="https://assets.nhle.com/logos/nhl/svg/${code}_dark.svg" alt="${code}" onerror="this.style.display='none'">`;
   }
 
   function matchupBox(m, label) {
     const done = !!m.w;
-    const active = !done && (m.s1 > 0 || m.s2 > 0);
+    const hasScores = (m.s1 !== '' && m.s2 !== '' && m.s1 !== undefined && m.s2 !== undefined);
+    const numS1 = +m.s1 || 0, numS2 = +m.s2 || 0;
+    const tied = hasScores && numS1 === numS2;
+    const active = !done && hasScores && (numS1 > 0 || numS2 > 0);
     const cls = done ? 'bk-done' : (active ? 'bk-active' : '');
-    const t1 = m.w === m.t1 ? 'bk-winner' : (done ? 'bk-loser' : (m.s1 > m.s2 ? 'bk-leading' : ''));
-    const t2 = m.w === m.t2 ? 'bk-winner' : (done ? 'bk-loser' : (m.s2 > m.s1 ? 'bk-leading' : ''));
+    // Jaune = équipe qui mène (peu importe si série terminée ou non). Égalité = pas de jaune.
+    let t1 = '', t2 = '';
+    if (done) {
+      // Série finie : gagnant en jaune, perdant estompé
+      t1 = m.w === m.t1 ? 'bk-leading' : 'bk-loser';
+      t2 = m.w === m.t2 ? 'bk-leading' : 'bk-loser';
+    } else if (hasScores && !tied) {
+      // En cours, pas d'égalité : équipe qui mène en jaune
+      t1 = numS1 > numS2 ? 'bk-leading' : '';
+      t2 = numS2 > numS1 ? 'bk-leading' : '';
+    }
     return `<div class="bk-matchup ${cls}">
       <div class="bk-round-label">${label}</div>
-      <div class="bk-team ${t1}">${logo(m.t1)}<span class="bk-team-code">${m.t1}</span><span class="bk-score">${m.s1}</span></div>
-      <div class="bk-team ${t2}">${logo(m.t2)}<span class="bk-team-code">${m.t2}</span><span class="bk-score">${m.s2}</span></div>
+      <div class="bk-team ${t1}${m.t1?'':' bk-pending'}">${logo(m.t1)}<span class="bk-team-code">${m.t1 || 'À venir'}</span><span class="bk-score">${m.s1}</span></div>
+      <div class="bk-team ${t2}${m.t2?'':' bk-pending'}">${logo(m.t2)}<span class="bk-team-code">${m.t2 || 'À venir'}</span><span class="bk-score">${m.s2}</span></div>
     </div>`;
   }
 
@@ -1383,9 +1455,9 @@ function renderBracket() {
   }
 
   function cfBox(cf, label) {
-    return cf.t1
-      ? matchupBox({ t1:cf.t1, s1:'', t2:cf.t2, s2:'', w:cf.w }, label)
-      : tbdBox(label);
+    // Affiche la boîte dès qu'au moins une équipe est qualifiée
+    if (!cf.t1 && !cf.t2) return tbdBox(label);
+    return matchupBox({ t1:cf.t1, s1:'', t2:cf.t2, s2:'', w:cf.w }, label);
   }
 
   // ── West R1 column ─────────────────────────────────────────
@@ -1493,11 +1565,13 @@ function renderPhase2Tab() {
     const picks = POOL.participants.map(p => {
       const pick = p.phase2 && p.phase2[s.key];
       if (!pick) return `<span class="pick-bubble"><span class="bubble-pred">—</span><span class="bubble-name">${p.nickname}</span></span>`;
-      const isWinner = s.winner && pick.equipe === s.winner;
+      const team = pick.equipe || pick;
+      const matchs = pick.matchs;
+      const isWinner = s.winner && team === s.winner;
       return `<span class="pick-bubble ${isWinner ? 'winner' : ''}">
         <span class="bubble-pred">
-          <img class="team-logo-sm" src="https://assets.nhle.com/logos/nhl/svg/${pick.equipe}_dark.svg" alt="${pick.equipe}" onerror="this.style.display='none'">
-          ${pick.equipe} ×${pick.matchs}
+          <img class="team-logo-sm" src="https://assets.nhle.com/logos/nhl/svg/${team}_dark.svg" alt="${team}" onerror="this.style.display='none'">
+          ${team}${matchs ? ' ×'+matchs : ''}
         </span>
         <span class="bubble-name">${p.nickname}</span>
       </span>`;
@@ -1510,7 +1584,7 @@ function renderPhase2Tab() {
       </div>
       <div class="series-result" style="padding:12px 14px 0;">
         ${s.winner
-          ? `<span class="series-winner">🏆 ${teamLogo(s.winner,'lg')} ${s.winner}</span>`
+          ? `<span class="series-winner">🏆 ${teamLogo(s.winner,'lg')} ${s.winner}${s.matchs ? ' en '+s.matchs : ''}</span>`
           : `<span class="series-pending">À déterminer…</span>`}
       </div>
       <div class="series-picks">${picks}</div>
@@ -1525,13 +1599,67 @@ function renderPhase2Tab() {
 }
 
 // ════════════════════════════════════════════════════════════════
+//  PHASE 3 TAB
+// ════════════════════════════════════════════════════════════════
+function renderPhase3Tab() {
+  const el = document.getElementById('tab-phase3-content');
+  if (!el || !POOL.finalSeries) return;
+  const s = POOL.finalSeries[0];
+  const f = POOL.bracket.final;
+  const t1 = f.t1, t2 = f.t2;
+  const winner = s.winner || f.w;
+
+  const picks = POOL.participants.map(p => {
+    const pred = p.phase3 && p.phase3[s.key];
+    if (!pred || !pred.equipe) {
+      return `<span class="pick-bubble"><span class="bubble-pred">—</span><span class="bubble-name">${p.nickname}</span></span>`;
+    }
+    const isWinner = winner && pred.equipe === winner;
+    return `<span class="pick-bubble ${isWinner ? 'winner' : ''}">
+      <span class="bubble-pred">
+        <img class="team-logo-sm" src="https://assets.nhle.com/logos/nhl/svg/${pred.equipe}_dark.svg" alt="${pred.equipe}" onerror="this.style.display='none'">
+        ${pred.equipe}${pred.matchs ? ' ×'+pred.matchs : ''}
+      </span>
+      <span class="bubble-name">${p.nickname}</span>
+    </span>`;
+  }).join('');
+
+  const header = (t1 && t2)
+    ? `<span class="series-card-label">
+         ${teamLogo(t1)} <span class="series-card-label-text">${t1}</span>
+         <span class="series-card-label-text" style="opacity:.5">vs</span>
+         ${teamLogo(t2)} <span class="series-card-label-text">${t2}</span>
+       </span>`
+    : `<span class="series-card-label-text">${s.full}</span>`;
+
+  const statusLine = winner
+    ? `<span class="series-winner">🏆 ${teamLogo(winner,'lg')} ${winner} CHAMPION${s.matchs ? ' en '+s.matchs : ''}</span>`
+    : (t1 && t2)
+      ? `<span class="series-pending">En attente du début de la grande finale…</span>`
+      : `<span class="series-pending">À déterminer (en attente des finales de conférence)…</span>`;
+
+  el.innerHTML = `
+    <div class="series-grid" style="grid-template-columns:1fr;margin-bottom:0;">
+      <div class="series-card" style="border-color:rgba(245,200,66,.4);">
+        <div class="series-card-header" style="background:linear-gradient(90deg,var(--navy),rgba(245,200,66,.15));">
+          ${header}
+          <span class="series-card-conf" style="background:rgba(245,200,66,.25);color:var(--gold);">🏆 FINALE</span>
+        </div>
+        <div class="series-matchup">${s.full}</div>
+        <div class="series-result">${statusLine}</div>
+        <div class="series-picks">${picks}</div>
+      </div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════
 //  TABS
 // ════════════════════════════════════════════════════════════════
 function switchTab(id) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + id).classList.add('active');
-  const idx = id === 'phase1' ? 0 : 1;
+  const idx = id === 'phase1' ? 0 : (id === 'phase2' ? 1 : 2);
   document.querySelectorAll('.tab-btn')[idx].classList.add('active');
 }
 
@@ -1544,7 +1672,8 @@ function render() {
     .sort((a,b) => b.total - a.total);
   const maxPts = sorted[0]?.total || 1;
 
-  // Update meta
+  // Update meta — Fix #9 : phase calculée automatiquement depuis l'état du bracket
+  POOL.phase = computePhase();
   document.getElementById('phase-badge').textContent = POOL.phase;
   const d = new Date(POOL.updated + 'T12:00:00');
   const fmt = d.toLocaleDateString('fr-CA', { year:'numeric', month:'long', day:'numeric' });
@@ -1579,6 +1708,7 @@ function render() {
           <div class="breakdown-chip">P2 <strong>${p ? (p.pts.phase2 || '—') : '—'}</strong></div>
           <div class="breakdown-chip">P3 <strong>${p ? (p.pts.phase3 || '—') : '—'}</strong></div>
           <div class="breakdown-chip">Bonus <strong>${p ? (p.pts.bonus || '—') : '—'}</strong></div>
+          <div class="breakdown-chip">Pén <strong>${p && p.penalty ? '-' + p.penalty : '—'}</strong></div>
         </div>
       </div>`;
   });
@@ -1604,13 +1734,14 @@ function render() {
         <td class="td-phase ${p.pts.phase2 ? 'has-pts' : ''}">${p.pts.phase2 || '—'}</td>
         <td class="td-phase ${p.pts.phase3 ? 'has-pts' : ''}">${p.pts.phase3 || '—'}</td>
         <td class="td-phase ${p.pts.bonus ? 'has-pts' : ''}">${p.pts.bonus || '—'}</td>
+        <td class="td-phase ${p.penalty ? 'has-penalty' : ''}">${p.penalty ? '-' + p.penalty : '—'}</td>
         <td class="td-pts">${p.total}</td>
         <td class="td-bar-wrap">
           <div class="td-bar"><div class="td-bar-fill" style="width:${pct}%"></div></div>
         </td>
       </tr>
       <tr class="detail-row" id="detail-row-${idx}">
-        <td colspan="8">
+        <td colspan="9">
           <div class="detail-panel" id="${detailId}">
             ${renderDetail(p)}
           </div>
@@ -1674,7 +1805,8 @@ function render() {
 }
 
 function renderDetail(p) {
-  const seriesRows = POOL.series.map(s => {
+  // ── Phase 1 ──
+  const phase1Rows = POOL.series.map(s => {
     const pred = p.phase1[s.key];
     if (!pred) return '';
     const r = getPredResult(pred, s);
@@ -1688,6 +1820,51 @@ function renderDetail(p) {
     </div>`;
   }).join('');
 
+  // ── Phase 2 (DF + FC) ──
+  const phase2Rows = [...POOL.series2, ...POOL.fcSeries].map(s => {
+    const pred = p.phase2 && p.phase2[s.key];
+    if (!pred) {
+      return `<div class="pred-row">
+        <span class="pred-serie">${s.label}</span>
+        <span class="pred-pick"><span style="color:var(--ink-30)">—</span></span>
+        <span class="pred-result result-pending">En attente</span>
+      </div>`;
+    }
+    const team = pred.equipe || pred;
+    const matchs = pred.matchs;
+    const r = getPredResult(pred, s);
+    return `<div class="pred-row">
+      <span class="pred-serie">${s.label}</span>
+      <span class="pred-pick">
+        <span>${team}</span>
+        ${matchs ? `<span class="pred-matchs">×${matchs}</span>` : ''}
+      </span>
+      <span class="pred-result ${resultClass(r)}">${resultLabel(r)}</span>
+    </div>`;
+  }).join('');
+
+  // ── Phase 3 (Coupe Stanley) ──
+  const phase3Rows = (POOL.finalSeries || []).map(s => {
+    const pred = p.phase3 && p.phase3[s.key];
+    if (!pred || !pred.equipe) {
+      return `<div class="pred-row">
+        <span class="pred-serie">${s.label}</span>
+        <span class="pred-pick"><span style="color:var(--ink-30)">—</span></span>
+        <span class="pred-result result-pending">En attente</span>
+      </div>`;
+    }
+    const r = getPredResult(pred, s);
+    return `<div class="pred-row">
+      <span class="pred-serie">${s.label}</span>
+      <span class="pred-pick">
+        <span>${pred.equipe}</span>
+        ${pred.matchs ? `<span class="pred-matchs">×${pred.matchs}</span>` : ''}
+      </span>
+      <span class="pred-result ${resultClass(r)}">${resultLabel(r)}</span>
+    </div>`;
+  }).join('');
+
+  // ── Bonus ──
   const bonusRows = POOL.bonusQuestions.map(q => {
     const ans = p.bonus[q.id];
     const r = getBonusResult(p, q);
@@ -1702,10 +1879,16 @@ function renderDetail(p) {
   return `<div class="detail-grid">
     <div>
       <div class="detail-section-title">Prédictions Phase 1</div>
-      ${seriesRows}
+      ${phase1Rows}
     </div>
     <div>
-      <div class="detail-section-title">Questions Bonus</div>
+      <div class="detail-section-title">Prédictions Phase 2</div>
+      ${phase2Rows}
+    </div>
+    <div>
+      <div class="detail-section-title">Phase 3 — Coupe Stanley</div>
+      ${phase3Rows}
+      <div class="detail-section-title" style="margin-top:16px;">Questions Bonus</div>
       <div class="bonus-grid">${bonusRows}</div>
     </div>
   </div>`;
@@ -1723,9 +1906,11 @@ function toggleDetail(idx) {
   }
 }
 
+propagateBracket();
 render();
 renderBracket();
 renderPhase2Tab();
+renderPhase3Tab();
 </script>
 </body>
 </html>
