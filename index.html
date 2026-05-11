@@ -879,7 +879,7 @@ footer {
     </div>
     <div class="header-meta">
       <div class="phase-badge" id="phase-badge">Phase 1 — Tour 1 terminé</div>
-      <div class="last-update" id="last-update">Mis à jour le mai 10, 2026 à 21:54 EDT</div>
+      <div class="last-update" id="last-update">—</div>
     </div>
   </div>
 </header>
@@ -949,7 +949,7 @@ footer {
 </main>
 
 <footer>
-  Pool NHL 2026 · Boutin · Mis à jour le <span id="footer-date">Mis à jour le mai 10, 2026 à 21:54 EDT</span>
+  Pool NHL 2026 · Boutin · Mis à jour le <span id="footer-date">—</span>
 </footer>
 
 <script>
@@ -974,15 +974,15 @@ const POOL = {
   bracket: {
     west: {
       arms: [
-        { label:'DF Ouest 1', r1:[{t1:'COL',s1:4,t2:'LAK',s2:0,w:'COL'},{t1:'DAL',s1:2,t2:'MIN',s2:4,w:'MIN'}], r2:{t1:'COL',s1:2,t2:'MIN',s2:1,w:null} },
-        { label:'DF Ouest 2', r1:[{t1:'VGK',s1:4,t2:'UTA',s2:2,w:'VGK'},{t1:'EDM',s1:2,t2:'ANA',s2:4,w:'ANA'}], r2:{t1:'VGK',s1:2,t2:'ANA',s2:1,w:null} },
+        { label:'DF Ouest 1', r1:[{t1:'COL',s1:4,t2:'LAK',s2:0,w:'COL'},{t1:'DAL',s1:2,t2:'MIN',s2:4,w:'MIN'}], r2:{t1:'COL',s1:0,t2:'MIN',s2:0,w:null} },
+        { label:'DF Ouest 2', r1:[{t1:'VGK',s1:4,t2:'UTA',s2:2,w:'VGK'},{t1:'EDM',s1:2,t2:'ANA',s2:4,w:'ANA'}], r2:{t1:'VGK',s1:0,t2:'ANA',s2:0,w:null} },
       ],
       cf: { t1:null, t2:null, w:null },
     },
     east: {
       arms: [
-        { label:'DF Est 1', r1:[{t1:'BUF',s1:4,t2:'BOS',s2:2,w:'BUF'},{t1:'TBL',s1:3,t2:'MTL',s2:4,w:'MTL'}], r2:{t1:'BUF',s1:1,t2:'MTL',s2:1,w:null} },
-        { label:'DF Est 2', r1:[{t1:'CAR',s1:4,t2:'OTT',s2:0,w:'CAR'},{t1:'PIT',s1:2,t2:'PHI',s2:4,w:'PHI'}], r2:{t1:'CAR',s1:4,t2:'PHI',s2:0,w:'CAR'} },
+        { label:'DF Est 1', r1:[{t1:'BUF',s1:4,t2:'BOS',s2:2,w:'BUF'},{t1:'TBL',s1:3,t2:'MTL',s2:4,w:'MTL'}], r2:{t1:'BUF',s1:0,t2:'MTL',s2:0,w:null} },
+        { label:'DF Est 2', r1:[{t1:'CAR',s1:4,t2:'OTT',s2:0,w:'CAR'},{t1:'PIT',s1:2,t2:'PHI',s2:4,w:'PHI'}], r2:{t1:'CAR',s1:0,t2:'PHI',s2:0,w:null} },
       ],
       cf: { t1:null, t2:null, w:null },
     },
@@ -990,10 +990,10 @@ const POOL = {
   },
 
   series2: [
-    { key:'df_car_phi', label:'CAR vs PHI', full:'Carolina Hurricanes vs Philadelphia Flyers', conf:'EST',   score:'4-0', winner:'CAR', matchs:4 },
-    { key:'df_min_col', label:'MIN vs COL', full:'Minnesota Wild vs Colorado Avalanche',       conf:'OUEST', score:'2-1', winner:null, matchs:3 },
-    { key:'df_buf_mtl', label:'BUF vs MTL', full:'Buffalo Sabres vs Montréal Canadiens',       conf:'EST',   score:'1-1', winner:null, matchs:2 },
-    { key:'df_vgk_ana', label:'VGK vs ANA', full:'Vegas Golden Knights vs Anaheim Ducks',      conf:'OUEST', score:'2-1', winner:null, matchs:3 },
+    { key:'df_car_phi', label:'CAR vs PHI', full:'Carolina Hurricanes vs Philadelphia Flyers', conf:'EST',   score:'0–0', winner:null, matchs:null },
+    { key:'df_min_col', label:'MIN vs COL', full:'Minnesota Wild vs Colorado Avalanche',       conf:'OUEST', score:'0–0', winner:null, matchs:null },
+    { key:'df_buf_mtl', label:'BUF vs MTL', full:'Buffalo Sabres vs Montréal Canadiens',       conf:'EST',   score:'0–0', winner:null, matchs:null },
+    { key:'df_vgk_ana', label:'VGK vs ANA', full:'Vegas Golden Knights vs Anaheim Ducks',      conf:'OUEST', score:'0–0', winner:null, matchs:null },
   ],
   fcSeries: [
     { key:'fc_est',   label:'FC Est',   full:'Finale de Conférence Est',   conf:'EST',   winner:null, matchs:null },
@@ -1667,9 +1667,14 @@ function switchTab(id) {
 //  RENDER
 // ════════════════════════════════════════════════════════════════
 function render() {
-  // Sort
+  // Sort + Standard Competition Ranking (1, 2, 3, 3, 5...)
   const sorted = [...POOL.participants].map(p => ({ ...p, total: calcScore(p) }))
     .sort((a,b) => b.total - a.total);
+  let prevTotal = null, prevRank = 0;
+  sorted.forEach((p, i) => {
+    if (p.total !== prevTotal) { prevRank = i + 1; prevTotal = p.total; }
+    p.rank = prevRank;
+  });
   const maxPts = sorted[0]?.total || 1;
 
   // Update meta — Fix #9 : phase calculée automatiquement depuis l'état du bracket
@@ -1680,52 +1685,104 @@ function render() {
   document.getElementById('last-update').textContent = 'Mis à jour le ' + fmt;
   document.getElementById('footer-date').textContent = fmt;
 
-  // Podium (top 3)
+  // Podium (top 3 rangs uniques, gestion ex æquo Option B)
   const podiumEl = document.getElementById('podium');
   podiumEl.innerHTML = '';
-  const allZero = !sorted.length || sorted[0].total === 0;
   const icons = ['🥇','🥈','🥉'];
-  const podiumSlots = allZero
-    ? [{ cls:'podium-2', rank:2 }, { cls:'podium-1', rank:1 }, { cls:'podium-3', rank:3 }]
-    : (() => {
-        const podiumOrder = sorted.length >= 2 ? [sorted[1], sorted[0], sorted[2]].filter(Boolean) : sorted;
-        const rankOf = p => sorted.indexOf(p) + 1;
-        return podiumOrder.map(p => ({ cls: ['podium-1','podium-2','podium-3'][rankOf(p)-1] || 'podium-3', rank: rankOf(p), p }));
-      })();
 
-  podiumSlots.forEach(slot => {
-    const { cls, rank, p } = slot;
-    podiumEl.innerHTML += `
-      <div class="podium-card ${cls}">
-        <span class="podium-trophy">${icons[rank-1] || '🏒'}</span>
-        <div class="podium-rank">${rank}</div>
-        <div class="podium-name">${p ? p.nom : '&nbsp;'}</div>
-        <div class="podium-nickname">${p && p.nickname !== p.nom ? p.nickname : '&nbsp;'}</div>
-        <div class="podium-pts">${p ? p.total : 0}</div>
-        <div class="podium-pts-label">points</div>
-        <div class="podium-breakdown">
-          <div class="breakdown-chip">P1 <strong>${p ? p.pts.phase1 : '—'}</strong></div>
-          <div class="breakdown-chip">P2 <strong>${p ? (p.pts.phase2 || '—') : '—'}</strong></div>
-          <div class="breakdown-chip">P3 <strong>${p ? (p.pts.phase3 || '—') : '—'}</strong></div>
-          <div class="breakdown-chip">Bonus <strong>${p ? (p.pts.bonus || '—') : '—'}</strong></div>
-          <div class="breakdown-chip">Pén <strong>${p && p.penalty ? '-' + p.penalty : '—'}</strong></div>
-        </div>
-      </div>`;
-  });
+  // Grouper par rang
+  const byRank = {};
+  sorted.forEach(p => { (byRank[p.rank] = byRank[p.rank] || []).push(p); });
+  const allZero = !sorted.length || sorted[0].total === 0;
+
+  // Top 3 rangs uniques
+  const top3 = Object.keys(byRank).map(Number).sort((a,b)=>a-b).slice(0, 3);
+
+  // Ordre visuel : 2e à gauche, 1er au centre, 3e à droite
+  // Map rang → classe CSS basée sur sa POSITION dans top3
+  const slotsOrdered = top3.map((rank, i) => ({
+    rank,
+    list: byRank[rank],
+    cls: ['podium-1','podium-2','podium-3'][i],
+  }));
+
+  const visual = [
+    slotsOrdered.find(s => s.cls === 'podium-2'),
+    slotsOrdered.find(s => s.cls === 'podium-1'),
+    slotsOrdered.find(s => s.cls === 'podium-3'),
+  ].filter(Boolean);
+
+  if (allZero) {
+    // État initial — affichage par défaut
+    [{cls:'podium-2',rank:2},{cls:'podium-1',rank:1},{cls:'podium-3',rank:3}].forEach(slot => {
+      podiumEl.innerHTML += `
+        <div class="podium-card ${slot.cls}">
+          <span class="podium-trophy">${icons[slot.rank-1] || '🏒'}</span>
+          <div class="podium-rank">${slot.rank}</div>
+          <div class="podium-name">&nbsp;</div>
+          <div class="podium-nickname">&nbsp;</div>
+          <div class="podium-pts">0</div>
+          <div class="podium-pts-label">points</div>
+        </div>`;
+    });
+  } else {
+    visual.forEach(slot => {
+      const { cls, rank, list } = slot;
+      const tied = list.length > 1;
+      const trophy = icons[rank-1] || '🏒';
+      const total = list[0].total;
+
+      if (!tied) {
+        // Affichage solo (comme avant)
+        const p = list[0];
+        podiumEl.innerHTML += `
+          <div class="podium-card ${cls}">
+            <span class="podium-trophy">${trophy}</span>
+            <div class="podium-rank">${rank}</div>
+            <div class="podium-name">${p.nom}</div>
+            <div class="podium-nickname">${p.nickname !== p.nom ? p.nickname : '&nbsp;'}</div>
+            <div class="podium-pts">${p.total}</div>
+            <div class="podium-pts-label">points</div>
+            <div class="podium-breakdown">
+              <div class="breakdown-chip">P1 <strong>${p.pts.phase1}</strong></div>
+              <div class="breakdown-chip">P2 <strong>${p.pts.phase2 || '—'}</strong></div>
+              <div class="breakdown-chip">P3 <strong>${p.pts.phase3 || '—'}</strong></div>
+              <div class="breakdown-chip">Bonus <strong>${p.pts.bonus || '—'}</strong></div>
+              <div class="breakdown-chip">Pén <strong>${p.penalty ? '-'+p.penalty : '—'}</strong></div>
+            </div>
+          </div>`;
+      } else {
+        // Affichage Option B : ex æquo
+        const nameChips = list.map(p => `<div class="breakdown-chip" style="color:var(--ink);font-size:10px;padding:4px 9px;">${p.nickname || p.nom}</div>`).join('');
+        podiumEl.innerHTML += `
+          <div class="podium-card ${cls}">
+            <span class="podium-trophy">${trophy}</span>
+            <div class="podium-rank">${rank}</div>
+            <div class="podium-name">Ex æquo (×${list.length})</div>
+            <div class="podium-nickname">${total} pts partagés</div>
+            <div class="podium-pts">${total}</div>
+            <div class="podium-pts-label">points</div>
+            <div class="podium-breakdown">${nameChips}</div>
+          </div>`;
+      }
+    });
+  }
 
   // Table
   const tbody = document.getElementById('standings-body');
   tbody.innerHTML = '';
   sorted.forEach((p, idx) => {
-    const rank = idx + 1;
+    const rank = p.rank;
     const rankClass = rank <= 3 ? ` r${rank}` : '';
+    const tied = sorted.filter(x => x.rank === rank).length > 1;
+    const rankBadge = tied ? `<sup style="font-size:9px;color:var(--ice-dark);font-family:var(--font-mono);font-weight:normal;letter-spacing:.04em;"> ex</sup>` : '';
     const pct = maxPts > 0 ? Math.round((p.total / maxPts) * 100) : 0;
     const trId = `row-${idx}`;
     const detailId = `detail-${idx}`;
 
     tbody.innerHTML += `
       <tr onclick="toggleDetail(${idx})" id="${trId}">
-        <td class="td-rank${rankClass}">${rank}</td>
+        <td class="td-rank${rankClass}">${rank}${rankBadge}</td>
         <td class="td-name">
           ${p.nom}
           ${p.nickname !== p.nom ? `<span class="td-nickname">${p.nickname}</span>` : ''}
