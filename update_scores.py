@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-update_scores_boutin.py — Met à jour les scores R2/R3/R4 du bracket NHL dans index.html
-Pool famille Boutin. Appelé chaque nuit à 3h AM EDT par GitHub Actions.
+update_scores.py — Met à jour les scores R2/R3/R4 du bracket NHL dans index.html
+Appelé chaque nuit à 3h AM EDT par GitHub Actions.
 """
 
 import json
@@ -79,7 +79,7 @@ def parse_series_by_abbrev(data, target_abbrevs):
         t2_info = series.get('bottomSeedTeam', {})
         t1 = t1_info.get('abbrev', '')
         t2 = t2_info.get('abbrev', '')
-        if not t1 or not t2:
+        if not t1 or not t2 or t1 in {'TBD', 'TBA'} or t2 in {'TBD', 'TBA'}:
             continue
         s1 = series.get('topSeedWins', 0) or 0
         s2 = series.get('bottomSeedWins', 0) or 0
@@ -369,7 +369,7 @@ def detect_r3_conf(key, html):
 # ─────────────────────────────────────────────────────────────────────────────
 
 def main():
-    print("=== Mise à jour scores NHL — Pool Boutin ===")
+    print("=== Mise à jour scores NHL ===")
     print(f"Fichier cible: {HTML_FILE}")
 
     try:
@@ -477,7 +477,7 @@ def main():
     with open(HTML_FILE, 'w', encoding='utf-8') as f:
         f.write(html)
 
-    print("\n✓ index.html sauvegardé. (Pool Boutin)")
+    print("\n✓ index.html sauvegardé.")
 
 
 if __name__ == '__main__':
