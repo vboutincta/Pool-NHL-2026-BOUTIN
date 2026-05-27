@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 update_scores.py — Met à jour les scores R2/R3/R4 du bracket NHL dans index.html
-Appelé chaque nuit à 3h AM EDT par GitHub Actions.
+Pool famille Boutin.
+Pool famille Boutin. Appelé chaque nuit à 3h AM EDT par GitHub Actions.
 """
 
 import json
@@ -427,6 +428,15 @@ def main():
             if ok:
                 print(f"  Series2 mis à jour: {s2_key}")
 
+    # ── Ordre visuel des bras R2 → CF (arm0=t1=haut, arm1=t2=bas) ───────────
+    # Évite que l'ordre API (topSeed/bottomSeed) contredise la continuité visuelle
+    # du bracket (ex: MTL vient de DF Est 1 = arm0 = doit être en t1/haut dans FC EST)
+    arm_order = {}
+    for key, info in r2_series.items():
+        if key in R2_BRACKET_MAP and info['w']:
+            conf_r2, arm_idx = R2_BRACKET_MAP[key]
+            arm_order[(conf_r2, arm_idx)] = info['w']
+
     # ── R3 (WCF / ECF) ───────────────────────────────────────────────────────
     print(f"\nSéries R3 trouvées: {len(r3_series)}")
     for key, info in r3_series.items():
@@ -447,12 +457,24 @@ def main():
             print(f"  AVERTISSEMENT: conf indéterminée pour {t1}/{t2} [{abbrev}] — skipping", file=sys.stderr)
             continue
 
-        html, ok = update_bracket_cf(html, conf, t1, t2, s1, s2, winner)
+        # Réordonner selon les bras visuels du bracket (arm0→t1, arm1→t2)
+        arm0_w = arm_order.get((conf, 0))
+        arm1_w = arm_order.get((conf, 1))
+        team_wins = {t1: s1, t2: s2}
+        if arm0_w in team_wins and arm1_w in team_wins:
+            t1_o, s1_o = arm0_w, team_wins[arm0_w]
+            t2_o, s2_o = arm1_w, team_wins[arm1_w]
+            print(f"  Ordre bras: {t1_o}(arm0)={s1_o} vs {t2_o}(arm1)={s2_o}")
+        else:
+            t1_o, s1_o, t2_o, s2_o = t1, s1, t2, s2
+            print(f"  Ordre bras indéterminé — ordre API conservé")
+
+        html, ok = update_bracket_cf(html, conf, t1_o, t2_o, s1_o, s2_o, winner)
         if ok:
-            print(f"  Bracket CF ({conf}/{abbrev}) mis à jour: {t1} {s1}–{s2} {t2}")
+            print(f"  Bracket CF ({conf}/{abbrev}) mis à jour: {t1_o} {s1_o}–{s2_o} {t2_o}")
 
         if fc_key:
-            html, ok = update_fc_series(html, fc_key, s1, s2, winner)
+            html, ok = update_fc_series(html, fc_key, s1_o, s2_o, winner)
             if ok:
                 print(f"  fcSeries mis à jour: {fc_key}")
 
