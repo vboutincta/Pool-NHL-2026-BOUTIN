@@ -879,7 +879,7 @@ footer {
     </div>
     <div class="header-meta">
       <div class="phase-badge" id="phase-badge">Phase 1 — Tour 1 terminé</div>
-      <div class="last-update" id="last-update">—</div>
+      <div class="last-update" id="last-update">Mis à jour le mai 27, 2026 à 15:46 EDT</div>
     </div>
   </div>
 </header>
@@ -949,7 +949,7 @@ footer {
 </main>
 
 <footer>
-  Pool NHL 2026 · Boutin · Mis à jour le <span id="footer-date">—</span>
+  Pool NHL 2026 · Boutin · Mis à jour le <span id="footer-date">Mis à jour le mai 27, 2026 à 15:46 EDT</span>
 </footer>
 
 <script>
@@ -957,8 +957,8 @@ footer {
 //  DATA — mis à jour à chaque import
 // ════════════════════════════════════════════════════════════════
 const POOL = {
-  updated: "2026-05-10",
-  phase: "Phase 2 — Tour 2 en cours",
+  updated: "2026-05-27",
+  phase: "Phase 3 — Finales de Conférence en cours",
 
   series: [
     { key:"est_buf_bos",   label:"BUF vs BOS",   full:"Buffalo Sabres vs Boston Bruins",          conf:"EST",   winner:"BUF", matchs:6 },
@@ -974,30 +974,30 @@ const POOL = {
   bracket: {
     west: {
       arms: [
-        { label:'DF Ouest 1', r1:[{t1:'COL',s1:4,t2:'LAK',s2:0,w:'COL'},{t1:'DAL',s1:2,t2:'MIN',s2:4,w:'MIN'}], r2:{t1:'COL',s1:0,t2:'MIN',s2:0,w:null} },
-        { label:'DF Ouest 2', r1:[{t1:'VGK',s1:4,t2:'UTA',s2:2,w:'VGK'},{t1:'EDM',s1:2,t2:'ANA',s2:4,w:'ANA'}], r2:{t1:'VGK',s1:0,t2:'ANA',s2:0,w:null} },
+        { label:'DF Ouest 1', r1:[{t1:'COL',s1:4,t2:'LAK',s2:0,w:'COL'},{t1:'DAL',s1:2,t2:'MIN',s2:4,w:'MIN'}], r2:{t1:'COL',s1:4,t2:'MIN',s2:1,w:'COL'} },
+        { label:'DF Ouest 2', r1:[{t1:'VGK',s1:4,t2:'UTA',s2:2,w:'VGK'},{t1:'EDM',s1:2,t2:'ANA',s2:4,w:'ANA'}], r2:{t1:'VGK',s1:4,t2:'ANA',s2:2,w:'VGK'} },
       ],
-      cf: { t1:null, s1:0, t2:null, s2:0, w:null },
+      cf: { t1:'COL', s1:0, t2:'VGK', s2:4, w:'VGK' },
     },
     east: {
       arms: [
-        { label:'DF Est 1', r1:[{t1:'BUF',s1:4,t2:'BOS',s2:2,w:'BUF'},{t1:'TBL',s1:3,t2:'MTL',s2:4,w:'MTL'}], r2:{t1:'BUF',s1:0,t2:'MTL',s2:0,w:null} },
-        { label:'DF Est 2', r1:[{t1:'CAR',s1:4,t2:'OTT',s2:0,w:'CAR'},{t1:'PIT',s1:2,t2:'PHI',s2:4,w:'PHI'}], r2:{t1:'CAR',s1:0,t2:'PHI',s2:0,w:null} },
+        { label:'DF Est 1', r1:[{t1:'BUF',s1:4,t2:'BOS',s2:2,w:'BUF'},{t1:'TBL',s1:3,t2:'MTL',s2:4,w:'MTL'}], r2:{t1:'BUF',s1:3,t2:'MTL',s2:4,w:'MTL'} },
+        { label:'DF Est 2', r1:[{t1:'CAR',s1:4,t2:'OTT',s2:0,w:'CAR'},{t1:'PIT',s1:2,t2:'PHI',s2:4,w:'PHI'}], r2:{t1:'CAR',s1:4,t2:'PHI',s2:0,w:'CAR'} },
       ],
-      cf: { t1:null, s1:0, t2:null, s2:0, w:null },
+      cf: { t1:'CAR', s1:2, t2:'MTL', s2:1, w:null },
     },
     final: { t1:null, s1:0, t2:null, s2:0, w:null },
   },
 
   series2: [
-    { key:'df_car_phi', label:'CAR vs PHI', full:'Carolina Hurricanes vs Philadelphia Flyers', conf:'EST',   score:'0–0', winner:null, matchs:null },
-    { key:'df_min_col', label:'MIN vs COL', full:'Minnesota Wild vs Colorado Avalanche',       conf:'OUEST', score:'0–0', winner:null, matchs:null },
-    { key:'df_buf_mtl', label:'BUF vs MTL', full:'Buffalo Sabres vs Montréal Canadiens',       conf:'EST',   score:'0–0', winner:null, matchs:null },
-    { key:'df_vgk_ana', label:'VGK vs ANA', full:'Vegas Golden Knights vs Anaheim Ducks',      conf:'OUEST', score:'0–0', winner:null, matchs:null },
+    { key:'df_car_phi', label:'CAR vs PHI', full:'Carolina Hurricanes vs Philadelphia Flyers', conf:'EST',   score:'4–0', winner:'CAR', matchs:4 },
+    { key:'df_min_col', label:'MIN vs COL', full:'Minnesota Wild vs Colorado Avalanche',       conf:'OUEST', score:'4–1', winner:'COL', matchs:5 },
+    { key:'df_buf_mtl', label:'BUF vs MTL', full:'Buffalo Sabres vs Montréal Canadiens',       conf:'EST',   score:'3–4', winner:'MTL', matchs:7 },
+    { key:'df_vgk_ana', label:'VGK vs ANA', full:'Vegas Golden Knights vs Anaheim Ducks',      conf:'OUEST', score:'4–2', winner:'VGK', matchs:6 },
   ],
   fcSeries: [
-    { key:'fc_est',   label:'FC Est',   full:'Finale de Conférence Est',   conf:'EST',   score:'0–0', winner:null, matchs:null },
-    { key:'fc_ouest', label:'FC Ouest', full:'Finale de Conférence Ouest', conf:'OUEST', score:'0–0', winner:null, matchs:null },
+    { key:'fc_est',   label:'FC Est',   full:'Finale de Conférence Est',   conf:'EST',   score:'2–1', winner:null, matchs:3 },
+    { key:'fc_ouest', label:'FC Ouest', full:'Finale de Conférence Ouest', conf:'OUEST', score:'0–4', winner:'VGK', matchs:4 },
   ],
   finalSeries: [
     { key:'sc_final', label:'Grande finale', full:'Stanley Cup Final', winner:null, matchs:null },
